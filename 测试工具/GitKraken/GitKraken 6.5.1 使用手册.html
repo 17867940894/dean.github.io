@@ -1,0 +1,2248 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitKraken 6.5.1 使用手册</title>
+    <style>
+        :root {
+            --bg: #0d1117;
+            --bg-card: #161b22;
+            --bg-hover: #1f2937;
+            --border: #30363d;
+            --text: #e6edf3;
+            --text-muted: #8b949e;
+            --accent: #f1502f;
+            --accent-light: #ff6b4a;
+            --green: #3fb950;
+            --blue: #58a6ff;
+            --purple: #bc8cff;
+            --yellow: #d29922;
+            --orange: #db6d28;
+            --teal: #2dd4bf;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans SC", Helvetica, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            font-size: 15px;
+        }
+
+        /* ===== 侧边栏导航 ===== */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 260px;
+            height: 100vh;
+            background: var(--bg-card);
+            border-right: 1px solid var(--border);
+            overflow-y: auto;
+            padding: 20px 0;
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 16px;
+        }
+
+        .sidebar-header .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .sidebar-header .logo span {
+            font-size: 28px;
+        }
+
+        .sidebar-header .version {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .sidebar nav ul {
+            list-style: none;
+        }
+
+        .sidebar nav > ul > li > a {
+            display: block;
+            padding: 8px 20px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 13px;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+
+        .sidebar nav > ul > li > a:hover {
+            color: var(--text);
+            background: var(--bg-hover);
+            border-left-color: var(--accent);
+        }
+
+        .sidebar nav > ul > li > a.active {
+            color: var(--accent);
+            border-left-color: var(--accent);
+            background: var(--bg-hover);
+        }
+
+        .sidebar nav > ul > li > a .num {
+            display: inline-block;
+            width: 22px;
+            height: 22px;
+            line-height: 22px;
+            text-align: center;
+            border-radius: 50%;
+            background: var(--border);
+            color: var(--text);
+            font-size: 11px;
+            margin-right: 8px;
+        }
+
+        .sidebar nav > ul > li > a.active .num {
+            background: var(--accent);
+        }
+
+        .sidebar nav li ul {
+            margin-left: 20px;
+            margin-bottom: 8px;
+        }
+
+        .sidebar nav li ul li a {
+            padding: 4px 16px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* ===== 主内容区 ===== */
+        .main {
+            margin-left: 260px;
+            padding: 0;
+        }
+
+        .content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 48px;
+        }
+
+        /* ===== Hero 区域 ===== */
+        .hero {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            padding: 60px 48px;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .hero-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+        }
+
+        .hero h1 {
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            background: linear-gradient(90deg, var(--accent), var(--orange), var(--yellow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero .subtitle {
+            font-size: 16px;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+        }
+
+        .hero-badges {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .hero-badge {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid var(--border);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .hero-badge strong {
+            color: var(--text);
+        }
+
+        /* ===== 章节通用样式 ===== */
+        .section {
+            margin-bottom: 56px;
+            scroll-margin-top: 20px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .section-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: var(--accent);
+            color: #fff;
+            font-weight: 700;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .section-header h2 {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .section h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 28px 0 12px;
+            color: var(--blue);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section h3 .icon {
+            font-size: 20px;
+        }
+
+        .section h4 {
+            font-size: 15px;
+            font-weight: 600;
+            margin: 20px 0 8px;
+            color: var(--purple);
+        }
+
+        .section p {
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+
+        /* ===== 代码块 ===== */
+        .code-block {
+            background: #1e1e2e;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin: 12px 0;
+            overflow-x: auto;
+            font-family: "JetBrains Mono", "Fira Code", "Consolas", monospace;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .code-block .lang-label {
+            display: inline-block;
+            background: var(--border);
+            color: var(--text-muted);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            margin-bottom: 8px;
+        }
+
+        .code-block pre {
+            color: #c9d1d9;
+        }
+
+        .code-block .kw { color: #ff7b72; }
+        .code-block .str { color: #a5d6ff; }
+        .code-block .cmt { color: #8b949e; }
+        .code-block .fn { color: #d2a8ff; }
+        .code-block .var { color: #79c0ff; }
+        .code-block .num { color: #ffa657; }
+
+        /* 行内代码 */
+        code {
+            background: rgba(110,118,129,0.2);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: "JetBrains Mono", "Consolas", monospace;
+            font-size: 13px;
+            color: var(--blue);
+        }
+
+        /* ===== 信息提示框 ===== */
+        .callout {
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin: 16px 0;
+            border-left: 4px solid;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .callout .callout-icon {
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .callout .callout-content {
+            flex: 1;
+        }
+
+        .callout .callout-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .callout-tip {
+            background: rgba(63,185,80,0.08);
+            border-color: var(--green);
+            color: var(--green);
+        }
+
+        .callout-tip .callout-content { color: var(--text); }
+
+        .callout-warn {
+            background: rgba(210,153,34,0.08);
+            border-color: var(--yellow);
+            color: var(--yellow);
+        }
+
+        .callout-warn .callout-content { color: var(--text); }
+
+        .callout-info {
+            background: rgba(88,166,255,0.08);
+            border-color: var(--blue);
+            color: var(--blue);
+        }
+
+        .callout-info .callout-content { color: var(--text); }
+
+        .callout-danger {
+            background: rgba(241,80,47,0.08);
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .callout-danger .callout-content { color: var(--text); }
+
+        /* ===== 表格 ===== */
+        .table-wrapper {
+            overflow-x: auto;
+            margin: 16px 0;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        table th {
+            background: var(--bg-card);
+            padding: 10px 16px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text);
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap;
+        }
+
+        table td {
+            padding: 10px 16px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-muted);
+        }
+
+        table tr:last-child td {
+            border-bottom: none;
+        }
+
+        table tr:hover td {
+            background: var(--bg-hover);
+            color: var(--text);
+        }
+
+        table td code {
+            font-size: 12px;
+        }
+
+        /* ===== 卡片网格 ===== */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 16px;
+            margin: 16px 0;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 18px;
+            transition: all 0.3s;
+        }
+
+        .card:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(241,80,47,0.1);
+        }
+
+        .card .card-icon {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .card .card-title {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 6px;
+            color: var(--text);
+        }
+
+        .card .card-desc {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* ===== 步骤流程 ===== */
+        .steps {
+            counter-reset: step;
+            margin: 16px 0;
+        }
+
+        .step {
+            position: relative;
+            padding-left: 48px;
+            margin-bottom: 20px;
+        }
+
+        .step::before {
+            counter-increment: step;
+            content: counter(step);
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 32px;
+            height: 32px;
+            line-height: 32px;
+            text-align: center;
+            border-radius: 50%;
+            background: var(--bg-card);
+            border: 2px solid var(--accent);
+            color: var(--accent);
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .step::after {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 32px;
+            bottom: -20px;
+            width: 2px;
+            background: var(--border);
+        }
+
+        .step:last-child::after {
+            display: none;
+        }
+
+        .step .step-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: var(--text);
+        }
+
+        .step .step-desc {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        /* ===== 键盘快捷键样式 ===== */
+        kbd {
+            display: inline-block;
+            padding: 2px 8px;
+            font-family: "JetBrains Mono", monospace;
+            font-size: 12px;
+            line-height: 1.4;
+            color: var(--text);
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-bottom-width: 2px;
+            border-radius: 4px;
+            margin: 0 2px;
+        }
+
+        /* ===== 界面示意图 ===== */
+        .ui-diagram {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 24px;
+            margin: 16px 0;
+        }
+
+        .ui-diagram svg {
+            width: 100%;
+            height: auto;
+        }
+
+        /* ===== 分支图示意 ===== */
+        .branch-demo {
+            background: #1e1e2e;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 16px 0;
+            font-family: monospace;
+            font-size: 13px;
+            overflow-x: auto;
+        }
+
+        /* ===== 列表样式 ===== */
+        .section ul, .section ol {
+            margin: 8px 0 12px 20px;
+        }
+
+        .section ul li, .section ol li {
+            margin-bottom: 6px;
+            color: var(--text);
+        }
+
+        .section ul li::marker {
+            color: var(--accent);
+        }
+
+        /* ===== 目录（首页快速导航）===== */
+        .toc-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .toc-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 14px;
+            text-decoration: none;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toc-item:hover {
+            border-color: var(--accent);
+            background: var(--bg-hover);
+        }
+
+        .toc-item .toc-num {
+            width: 28px;
+            height: 28px;
+            line-height: 28px;
+            text-align: center;
+            border-radius: 6px;
+            background: var(--border);
+            color: var(--accent);
+            font-weight: 700;
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+
+        .toc-item .toc-text {
+            color: var(--text);
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        /* ===== 标签 ===== */
+        .tag {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .tag-free { background: rgba(63,185,80,0.15); color: var(--green); }
+        .tag-pro { background: rgba(188,140,255,0.15); color: var(--purple); }
+        .tag-new { background: rgba(88,166,255,0.15); color: var(--blue); }
+
+        /* ===== 页脚 ===== */
+        .footer {
+            text-align: center;
+            padding: 40px;
+            border-top: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        /* 滚动条 */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
+        }
+
+        /* 响应式 */
+        @media (max-width: 900px) {
+            .sidebar { display: none; }
+            .main { margin-left: 0; }
+            .content { padding: 20px; }
+            .hero { padding: 40px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ===== 侧边栏 ===== -->
+<aside class="sidebar">
+    <div class="sidebar-header">
+        <div class="logo">
+            <span>🦑</span>
+            GitKraken
+        </div>
+        <div class="version">v6.5.1 使用手册</div>
+    </div>
+    <nav>
+        <ul>
+            <li><a href="#toc"><span class="num">0</span>目录导航</a></li>
+            <li><a href="#intro"><span class="num">1</span>软件简介</a></li>
+            <li><a href="#install"><span class="num">2</span>安装与配置</a></li>
+            <li><a href="#ui"><span class="num">3</span>界面总览</a></li>
+            <li><a href="#repo"><span class="num">4</span>仓库管理</a></li>
+            <li><a href="#commit"><span class="num">5</span>提交与暂存</a></li>
+            <li><a href="#branch"><span class="num">6</span>分支管理</a></li>
+            <li><a href="#merge"><span class="num">7</span>合并与变基</a></li>
+            <li><a href="#remote"><span class="num">8</span>远程操作</a></li>
+            <li><a href="#conflict"><span class="num">9</span>冲突解决</a></li>
+            <li><a href="#pr"><span class="num">10</span>Pull Request</a></li>
+            <li><a href="#stash"><span class="num">11</span>Stash 储藏</a></li>
+            <li><a href="#ssh"><span class="num">12</span>SSH 密钥配置</a></li>
+            <li><a href="#gitflow"><span class="num">13</span>GitFlow 工作流</a></li>
+            <li><a href="#shortcuts"><span class="num">14</span>快捷键速查</a></li>
+            <li><a href="#faq"><span class="num">15</span>常见问题</a></li>
+        </ul>
+    </nav>
+</aside>
+
+<!-- ===== 主内容 ===== -->
+<div class="main">
+
+<!-- Hero -->
+<div class="hero">
+    <div class="hero-icon">🦑</div>
+    <h1>GitKraken 6.5.1 使用手册</h1>
+    <p class="subtitle">最强 Git 图形化客户端 · 可视化分支管理 · 高效协作开发</p>
+    <div class="hero-badges">
+        <div class="hero-badge"><strong>Windows</strong> / macOS / Linux</div>
+        <div class="hero-badge"><strong>免费版</strong> 支持私有仓库</div>
+        <div class="hero-badge"><strong>GitHub</strong> / GitLab / Bitbucket</div>
+        <div class="hero-badge">发布于 <strong>2021年</strong></div>
+    </div>
+</div>
+
+<div class="content">
+
+<!-- ===== 0. 目录导航 ===== -->
+<section class="section" id="toc">
+    <div class="section-header">
+        <span class="section-number">0</span>
+        <h2>目录导航</h2>
+    </div>
+    <p>本手册涵盖 GitKraken 6.5.1 的完整使用流程，从安装配置到高级操作，适合零基础和有一定 Git 经验的开发者。</p>
+    <div class="toc-grid">
+        <a href="#intro" class="toc-item"><span class="toc-num">1</span><span class="toc-text">软件简介</span></a>
+        <a href="#install" class="toc-item"><span class="toc-num">2</span><span class="toc-text">安装与配置</span></a>
+        <a href="#ui" class="toc-item"><span class="toc-num">3</span><span class="toc-text">界面总览</span></a>
+        <a href="#repo" class="toc-item"><span class="toc-num">4</span><span class="toc-text">仓库管理</span></a>
+        <a href="#commit" class="toc-item"><span class="toc-num">5</span><span class="toc-text">提交与暂存</span></a>
+        <a href="#branch" class="toc-item"><span class="toc-num">6</span><span class="toc-text">分支管理</span></a>
+        <a href="#merge" class="toc-item"><span class="toc-num">7</span><span class="toc-text">合并与变基</span></a>
+        <a href="#remote" class="toc-item"><span class="toc-num">8</span><span class="toc-text">远程操作</span></a>
+        <a href="#conflict" class="toc-item"><span class="toc-num">9</span><span class="toc-text">冲突解决</span></a>
+        <a href="#pr" class="toc-item"><span class="toc-num">10</span><span class="toc-text">Pull Request</span></a>
+        <a href="#stash" class="toc-item"><span class="toc-num">11</span><span class="toc-text">Stash 储藏</span></a>
+        <a href="#ssh" class="toc-item"><span class="toc-num">12</span><span class="toc-text">SSH 密钥配置</span></a>
+        <a href="#gitflow" class="toc-item"><span class="toc-num">13</span><span class="toc-text">GitFlow 工作流</span></a>
+        <a href="#shortcuts" class="toc-item"><span class="toc-num">14</span><span class="toc-text">快捷键速查</span></a>
+        <a href="#faq" class="toc-item"><span class="toc-num">15</span><span class="toc-text">常见问题</span></a>
+    </div>
+</section>
+
+<!-- ===== 1. 软件简介 ===== -->
+<section class="section" id="intro">
+    <div class="section-header">
+        <span class="section-number">1</span>
+        <h2>软件简介</h2>
+    </div>
+
+    <p>GitKraken 是一款跨平台的 Git 图形化客户端，由 Axosoft 开发。它以直观的可视化分支图、流畅的交互体验和强大的协作功能著称，是目前最受欢迎的 Git GUI 工具之一。</p>
+
+    <div class="callout callout-tip">
+        <span class="callout-icon">💡</span>
+        <div class="callout-content">
+            <div class="callout-title">关于 6.5.1 版本</div>
+            GitKraken 6.5.1 是<strong>最后一个免费支持私有仓库</strong>的版本。从 6.5.2 开始，免费版仅能打开公开仓库，私有仓库需要付费 Pro 许可证。如果你需要免费管理私有仓库，请保留使用此版本。
+        </div>
+    </div>
+
+    <h3><span class="icon">✨</span> 核心特性</h3>
+    <div class="card-grid">
+        <div class="card">
+            <div class="card-icon">📊</div>
+            <div class="card-title">可视化分支图</div>
+            <div class="card-desc">以 DAG 有向无环图动态渲染提交网络，分支以彩色线条标识，合并点高亮显示，一目了然。</div>
+        </div>
+        <div class="card">
+            <div class="card-icon">🔀</div>
+            <div class="card-title">拖拽式分支操作</div>
+            <div class="card-desc">支持拖拽合并、变基、检出分支，右键菜单提供回退、创建标签、Cherry-pick 等高频操作。</div>
+        </div>
+        <div class="card">
+            <div class="card-icon">📝</div>
+            <div class="card-title">精细化暂存控制</div>
+            <div class="card-desc">双栏分层结构，支持逐行/逐块暂存（Stage Hunk），彻底取代 git add -p 的繁琐流程。</div>
+        </div>
+        <div class="card">
+            <div class="card-icon">🔧</div>
+            <div class="card-title">内置合并工具</div>
+            <div class="card-desc">三向合并视图，支持逐行选择冲突解决方案，可视化对比，无需借助外部工具。</div>
+        </div>
+        <div class="card">
+            <div class="card-icon">🔗</div>
+            <div class="card-title">平台集成</div>
+            <div class="card-desc">原生支持 GitHub、GitLab、Bitbucket、Azure DevOps，可直接在客户端发起和管理 PR/MR。</div>
+        </div>
+        <div class="card">
+            <div class="card-icon">⚡</div>
+            <div class="card-title">大型仓库优化</div>
+            <div class="card-desc">增量索引、异步加载、内存缓存淘汰机制，数万次提交的超大项目仍保持流畅。</div>
+        </div>
+    </div>
+
+    <h3><span class="icon">📋</span> 系统要求</h3>
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>操作系统</th>
+                    <th>最低版本</th>
+                    <th>架构</th>
+                    <th>备注</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Windows</td>
+                    <td>Windows 10 / Server 2016</td>
+                    <td>64 位</td>
+                    <td>需要 .NET Framework 4.6+</td>
+                </tr>
+                <tr>
+                    <td>macOS</td>
+                    <td>10.13 (High Sierra)</td>
+                    <td>Intel / Apple Silicon</td>
+                    <td>支持 M1 芯片（Rosetta 2）</td>
+                </tr>
+                <tr>
+                    <td>Linux (Ubuntu)</td>
+                    <td>16.04 LTS</td>
+                    <td>64 位</td>
+                    <td>提供 .deb / .rpm / .tar.gz</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="callout callout-info">
+        <span class="callout-icon">ℹ️</span>
+        <div class="callout-content">
+            <div class="callout-title">前置条件</div>
+            GitKraken 底层调用系统 Git 可执行文件，建议提前安装 Git CLI（2.11+）并配置好 <code>user.name</code> 和 <code>user.email</code>。
+        </div>
+    </div>
+</section>
+
+<!-- ===== 2. 安装与配置 ===== -->
+<section class="section" id="install">
+    <div class="section-header">
+        <span class="section-number">2</span>
+        <h2>安装与配置</h2>
+    </div>
+
+    <h3><span class="icon">2.1</span> 下载安装</h3>
+
+    <h4>Windows</h4>
+    <div class="steps">
+        <div class="step">
+            <div class="step-title">下载安装包</div>
+            <div class="step-desc">获取 <code>GitKrakenSetup-6.5.1.exe</code> 安装程序（约 113MB）。</div>
+        </div>
+        <div class="step">
+            <div class="step-title">运行安装</div>
+            <div class="step-desc">双击运行安装程序，按照向导点击 Next 完成安装。默认安装路径为 <code>C:\Users\用户名\AppData\Local\GitKraken</code>。</div>
+        </div>
+        <div class="step">
+            <div class="step-title">启动 GitKraken</div>
+            <div class="step-desc">首次启动会要求登录 GitKraken 账号（可用 GitHub / GitLab / Bitbucket / Google 账号快捷登录）。</div>
+        </div>
+    </div>
+
+    <h4>macOS</h4>
+    <div class="steps">
+        <div class="step">
+            <div class="step-title">下载 .dmg 文件</div>
+            <div class="step-desc">获取 <code>GitKraken-v6.5.1-macOS.dmg</code>。</div>
+        </div>
+        <div class="step">
+            <div class="step-title">拖拽安装</div>
+            <div class="step-desc">打开 .dmg，将 GitKraken 拖入 Applications 文件夹。</div>
+        </div>
+        <div class="step">
+            <div class="step-title">首次启动</div>
+            <div class="step-desc">在启动台打开 GitKraken。如提示"来自未知开发者"，右键选择"打开"即可。</div>
+        </div>
+    </div>
+
+    <h4>Linux (Ubuntu/Debian)</h4>
+    <div class="code-block">
+        <span class="lang-label">bash</span>
+<pre><span class="cmt"># 下载 .deb 包</span>
+<span class="kw">wget</span> https://release.gitkraken.com/linux/gitkraken-amd64.deb
+
+<span class="cmt"># 安装</span>
+<span class="kw">sudo</span> dpkg -i gitkraken-amd64.deb
+
+<span class="cmt"># 如有依赖缺失，修复依赖</span>
+<span class="kw">sudo</span> apt-get install -f
+
+<span class="cmt"># 启动</span>
+gitkraken</pre>
+    </div>
+
+    <h3><span class="icon">2.2</span> 首次配置</h3>
+
+    <h4>配置 Git 用户信息</h4>
+    <p>首次使用前，确保 Git 全局用户信息已正确设置：</p>
+    <div class="code-block">
+        <span class="lang-label">bash</span>
+<pre><span class="kw">git</span> config --global user.name <span class="str">"你的名字"</span>
+<span class="kw">git</span> config --global user.email <span class="str">"你的邮箱@example.com"</span></pre>
+    </div>
+
+    <p>也可以在 GitKraken 内部配置：<code>File → Preferences → Git</code></p>
+
+    <h4>配置默认编辑器</h4>
+    <p>在 <code>Preferences → General</code> 中可设置外部编辑器（如 VS Code、Sublime Text 等），用于打开和编辑文件。</p>
+
+    <h4>配置主题</h4>
+    <p>GitKraken 支持亮色和暗色两种主题：<code>Preferences → UI Customization → Theme</code></p>
+    <ul>
+        <li><strong>Light</strong>：浅色主题，适合白天使用</li>
+        <li><strong>Dark</strong>：深色主题（默认），护眼且美观</li>
+    </ul>
+
+    <h3><span class="icon">2.3</span> 关联 Git 托管平台</h3>
+    <p>在 <code>Preferences → Integrations</code> 中，可以关联你的 Git 托管账号：</p>
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>平台</th>
+                    <th>认证方式</th>
+                    <th>关联后功能</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>GitHub</td>
+                    <td>OAuth / Token</td>
+                    <td>Clone、PR、Issue 集成、Fork</td>
+                </tr>
+                <tr>
+                    <td>GitLab</td>
+                    <td>OAuth / Token</td>
+                    <td>Clone、MR、Issue 集成</td>
+                </tr>
+                <tr>
+                    <td>Bitbucket</td>
+                    <td>OAuth</td>
+                    <td>Clone、PR、Issue 集成</td>
+                </tr>
+                <tr>
+                    <td>Azure DevOps</td>
+                    <td>Token</td>
+                    <td>Clone、PR 集成</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<!-- ===== 3. 界面总览 ===== -->
+<section class="section" id="ui">
+    <div class="section-header">
+        <span class="section-number">3</span>
+        <h2>界面总览</h2>
+    </div>
+
+    <p>GitKraken 的界面分为三大核心区域：左侧面板、中央提交图、右侧提交面板。理解这三个区域的协作方式是高效使用的基础。</p>
+
+    <div class="ui-diagram">
+        <svg viewBox="0 0 800 420" xmlns="http://www.w3.org/2000/svg">
+            <!-- 背景分区色块 -->
+            <rect x="0" y="0" width="220" height="420" fill="#1a1a2e" rx="8"/>
+            <rect x="230" y="0" width="350" height="420" fill="#16213e" rx="8"/>
+            <rect x="590" y="0" width="210" height="420" fill="#1a1a2e" rx="8"/>
+
+            <!-- 左侧面板 -->
+            <text x="110" y="25" fill="#f1502f" font-size="13" font-weight="bold" text-anchor="middle" font-family="sans-serif">左侧面板 Left Panel</text>
+            <rect x="15" y="40" width="190" height="30" fill="#1f2937" rx="4"/>
+            <text x="25" y="59" fill="#8b949e" font-size="11" font-family="sans-serif">🔍 Search / Filter</text>
+
+            <rect x="15" y="80" width="190" height="24" fill="none" stroke="#30363d" rx="4"/>
+            <text x="25" y="96" fill="#58a6ff" font-size="11" font-family="sans-serif">📁 Repository Name</text>
+
+            <rect x="15" y="112" width="190" height="20" fill="none" stroke="#30363d" rx="4"/>
+            <text x="25" y="126" fill="#8b949e" font-size="11" font-family="sans-serif">  Branches (3)</text>
+            <rect x="25" y="136" width="170" height="16" fill="#21262d" rx="3"/>
+            <circle cx="33" cy="144" r="4" fill="#f1502f"/>
+            <text x="42" y="148" fill="#e6edf3" font-size="10" font-family="sans-serif">main</text>
+            <rect x="25" y="156" width="170" height="16" fill="#21262d" rx="3"/>
+            <circle cx="33" cy="164" r="4" fill="#3fb950"/>
+            <text x="42" y="168" fill="#e6edf3" font-size="10" font-family="sans-serif">develop</text>
+            <rect x="25" y="176" width="170" height="16" fill="#21262d" rx="3"/>
+            <circle cx="33" cy="184" r="4" fill="#bc8cff"/>
+            <text x="42" y="188" fill="#e6edf3" font-size="10" font-family="sans-serif">feature/login</text>
+
+            <rect x="15" y="200" width="190" height="20" fill="none" stroke="#30363d" rx="4"/>
+            <text x="25" y="214" fill="#8b949e" font-size="11" font-family="sans-serif">  Remotes (1)</text>
+            <rect x="25" y="224" width="170" height="16" fill="#21262d" rx="3"/>
+            <text x="35" y="236" fill="#e6edf3" font-size="10" font-family="sans-serif">🌐 origin</text>
+
+            <rect x="15" y="248" width="190" height="20" fill="none" stroke="#30363d" rx="4"/>
+            <text x="25" y="262" fill="#8b949e" font-size="11" font-family="sans-serif">  Tags (2)</text>
+            <rect x="25" y="272" width="170" height="16" fill="#21262d" rx="3"/>
+            <text x="35" y="284" fill="#d29922" font-size="10" font-family="sans-serif">🏷 v1.0.0</text>
+            <rect x="25" y="292" width="170" height="16" fill="#21262d" rx="3"/>
+            <text x="35" y="304" fill="#d29922" font-size="10" font-family="sans-serif">🏷 v0.9.0</text>
+
+            <rect x="15" y="316" width="190" height="20" fill="none" stroke="#30363d" rx="4"/>
+            <text x="25" y="330" fill="#8b949e" font-size="11" font-family="sans-serif">  Stashes (0)</text>
+
+            <rect x="15" y="345" width="190" height="20" fill="none" stroke="#30363d" rx="4"/>
+            <text x="25" y="359" fill="#8b949e" font-size="11" font-family="sans-serif">  Pull Requests</text>
+
+            <!-- 中央提交图 -->
+            <text x="405" y="25" fill="#f1502f" font-size="13" font-weight="bold" text-anchor="middle" font-family="sans-serif">提交图 Commit Graph</text>
+
+            <!-- 提交节点和连线 -->
+            <line x1="370" y1="60" x2="370" y2="380" stroke="#f1502f" stroke-width="2"/>
+            <line x1="370" y1="140" x2="430" y2="180" stroke="#3fb950" stroke-width="2"/>
+            <line x1="430" y1="180" x2="430" y2="300" stroke="#3fb950" stroke-width="2"/>
+            <line x1="430" y1="220" x2="490" y2="260" stroke="#bc8cff" stroke-width="2"/>
+            <line x1="490" y1="260" x2="490" y2="340" stroke="#bc8cff" stroke-width="2"/>
+            <line x1="490" y1="340" x2="370" y2="380" stroke="#bc8cff" stroke-width="2"/>
+
+            <!-- 提交圆点 -->
+            <circle cx="370" cy="70" r="7" fill="#f1502f" stroke="#0d1117" stroke-width="2"/>
+            <circle cx="370" cy="110" r="7" fill="#f1502f" stroke="#0d1117" stroke-width="2"/>
+            <circle cx="370" cy="150" r="7" fill="#f1502f" stroke="#0d1117" stroke-width="2"/>
+            <circle cx="430" cy="190" r="7" fill="#3fb950" stroke="#0d1117" stroke-width="2"/>
+            <circle cx="430" cy="230" r="7" fill="#3fb950" stroke="#0d1117" stroke-width="2"/>
+            <circle cx="490" cy="270" r="7" fill="#bc8cff" stroke="#0d1117" stroke-width="2"/>
+            <circle cx="490" cy="310" r="7" fill="#bc8cff" stroke="#0d1117" stroke-width="2"/>
+
+            <!-- 合并菱形 -->
+            <polygon points="370,370 378,378 370,386 362,378" fill="#f1502f" stroke="#0d1117" stroke-width="2"/>
+
+            <!-- 提交信息 -->
+            <text x="385" y="74" fill="#e6edf3" font-size="10" font-family="sans-serif">Initial commit</text>
+            <text x="385" y="114" fill="#e6edf3" font-size="10" font-family="sans-serif">Add README</text>
+            <text x="385" y="154" fill="#e6edf3" font-size="10" font-family="sans-serif">Setup project</text>
+            <text x="445" y="194" fill="#e6edf3" font-size="10" font-family="sans-serif">Create develop branch</text>
+            <text x="445" y="234" fill="#e6edf3" font-size="10" font-family="sans-serif">Add auth module</text>
+            <text x="505" y="274" fill="#e6edf3" font-size="10" font-family="sans-serif">Add login UI</text>
+            <text x="505" y="314" fill="#e6edf3" font-size="10" font-family="sans-serif">Fix login bug</text>
+            <text x="385" y="384" fill="#d29922" font-size="10" font-family="sans-serif">Merge feature/login</text>
+
+            <!-- 分支标签 -->
+            <rect x="350" y="46" width="40" height="14" fill="#f1502f" rx="7"/>
+            <text x="370" y="56" fill="#fff" font-size="9" text-anchor="middle" font-family="sans-serif">main</text>
+
+            <!-- WIP 节点 -->
+            <circle cx="370" cy="400" r="6" fill="none" stroke="#58a6ff" stroke-width="2" stroke-dasharray="3,2"/>
+            <text x="385" y="404" fill="#58a6ff" font-size="10" font-family="sans-serif">// WIP</text>
+
+            <!-- 右侧面板 -->
+            <text x="695" y="25" fill="#f1502f" font-size="13" font-weight="bold" text-anchor="middle" font-family="sans-serif">提交面板 Commit Panel</text>
+
+            <rect x="600" y="40" width="180" height="130" fill="#1f2937" rx="6"/>
+            <text x="610" y="58" fill="#8b949e" font-size="10" font-family="sans-serif">Unstaged Files (3)</text>
+            <rect x="610" y="66" width="160" height="18" fill="#21262d" rx="3"/>
+            <text x="616" y="78" fill="#f1502f" font-size="10" font-family="sans-serif">📄 src/App.js</text>
+            <rect x="610" y="88" width="160" height="18" fill="#21262d" rx="3"/>
+            <text x="616" y="100" fill="#f1502f" font-size="10" font-family="sans-serif">📄 src/index.js</text>
+            <rect x="610" y="110" width="160" height="18" fill="#21262d" rx="3"/>
+            <text x="616" y="122" fill="#f1502f" font-size="10" font-family="sans-serif">📄 README.md</text>
+            <rect x="610" y="138" width="75" height="22" fill="#3fb950" rx="4"/>
+            <text x="647" y="152" fill="#fff" font-size="10" text-anchor="middle" font-family="sans-serif">Stage All</text>
+
+            <rect x="600" y="180" width="180" height="100" fill="#1f2937" rx="6"/>
+            <text x="610" y="198" fill="#8b949e" font-size="10" font-family="sans-serif">Staged Files (0)</text>
+            <text x="610" y="220" fill="#484f58" font-size="10" font-family="sans-serif">No files staged</text>
+
+            <rect x="600" y="290" width="180" height="80" fill="#1f2937" rx="6"/>
+            <text x="610" y="308" fill="#8b949e" font-size="10" font-family="sans-serif">Commit Message</text>
+            <rect x="610" y="316" width="160" height="40" fill="#0d1117" stroke="#30363d" rx="4"/>
+            <text x="616" y="332" fill="#484f58" font-size="10" font-family="sans-serif">Enter commit message...</text>
+            <rect x="610" y="362" width="70" height="22" fill="#f1502f" rx="4"/>
+            <text x="645" y="376" fill="#fff" font-size="10" text-anchor="middle" font-family="sans-serif">Commit</text>
+
+            <!-- 标注线 -->
+            <line x1="220" y1="50" x2="230" y2="50" stroke="#30363d" stroke-width="1" stroke-dasharray="3,3"/>
+            <line x1="580" y1="50" x2="590" y2="50" stroke="#30363d" stroke-width="1" stroke-dasharray="3,3"/>
+        </svg>
+    </div>
+
+    <h3><span class="icon">3.1</span> 左侧面板（Left Panel）</h3>
+    <p>左侧面板是导航和管理的核心区域，包含以下可折叠分组：</p>
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>分组</th>
+                    <th>功能说明</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Repository</strong></td>
+                    <td>显示当前仓库名称，点击可查看仓库详情、配置 .gitignore 等</td>
+                </tr>
+                <tr>
+                    <td><strong>Branches</strong></td>
+                    <td>列出所有本地和远程分支，双击可切换检出，右键提供删除、重命名等操作</td>
+                </tr>
+                <tr>
+                    <td><strong>Remotes</strong></td>
+                    <td>管理远程仓库源（origin、upstream 等），可添加/删除远程地址</td>
+                </tr>
+                <tr>
+                    <td><strong>Tags</strong></td>
+                    <td>列出所有标签，右键可创建、删除、推送标签</td>
+                </tr>
+                <tr>
+                    <td><strong>Stashes</strong></td>
+                    <td>管理 Git Stash 储藏记录，可应用、删除、创建储藏</td>
+                </tr>
+                <tr>
+                    <td><strong>Pull Requests</strong></td>
+                    <td>（需关联平台）显示和管理 PR/MR 列表</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3><span class="icon">3.2</span> 中央提交图（Commit Graph）</h3>
+    <p>提交图是 GitKraken 的灵魂所在，它以时间轴 + DAG 有向无环图的形式可视化整个仓库的提交历史。</p>
+    <ul>
+        <li><strong>节点</strong>：每个圆点代表一次提交，颜色对应所属分支</li>
+        <li><strong>连线</strong>：彩色线条表示分支的创建、合并和分叉路径</li>
+        <li><strong>菱形</strong>：合并提交以菱形节点标识</li>
+        <li><strong>// WIP 节点</strong>：工作区有未提交的修改时，会在分支顶部显示虚线圆圈</li>
+        <li><strong>悬停</strong>：鼠标悬停在提交节点上可查看作者、时间、SHA-1 哈希、变更文件</li>
+        <li><strong>右键</strong>：右键点击提交节点弹出操作菜单（检出、回退、创建分支、Cherry-pick 等）</li>
+        <li><strong>拖拽</strong>：可将分支拖拽到另一个分支上执行合并/变基操作</li>
+    </ul>
+
+    <h3><span class="icon">3.3</span> 右侧提交面板（Commit Panel）</h3>
+    <p>右侧面板在选中 <code>// WIP</code> 节点或某个提交时显示，包含：</p>
+    <ul>
+        <li><strong>Unstaged Files</strong>：工作区已修改但未暂存的文件列表</li>
+        <li><strong>Staged Files</strong>：已暂存待提交的文件列表</li>
+        <li><strong>Diff Viewer</strong>：点击文件名展开行级差异对比，支持语法高亮</li>
+        <li><strong>Commit Message</strong>：提交信息输入框，支持多行</li>
+        <li><strong>Commit 按钮</strong>：执行提交</li>
+    </ul>
+
+    <h3><span class="icon">3.4</span> 顶部工具栏</h3>
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>按钮</th>
+                    <th>功能</th>
+                    <th>对应 Git 命令</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>🔄 Fetch</td><td>拉取远程更新（不合并）</td><td><code>git fetch</code></td></tr>
+                <tr><td>⬇ Pull</td><td>拉取并合并远程更新</td><td><code>git pull</code></td></tr>
+                <tr><td>⬆ Push</td><td>推送本地提交到远程</td><td><code>git push</code></td></tr>
+                <tr><td>🌿 Branch</td><td>创建新分支</td><td><code>git branch</code></td></tr>
+                <tr><td>📦 Stash</td><td>储藏当前修改</td><td><code>git stash</code></td></tr>
+                <tr><td>🔄 Apply Stash</td><td>应用储藏</td><td><code>git stash apply</code></td></tr>
+                <tr><td>⚡ Terminal</td><td>打开内置终端</td><td>—</td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<!-- ===== 4. 仓库管理 ===== -->
+<section class="section" id="repo">
+    <div class="section-header">
+        <span class="section-number">4</span>
+        <h2>仓库管理</h2>
+    </div>
+
+    <h3><span class="icon">4.1</span> 克隆远程仓库</h3>
+    <div class="steps">
+        <div class="step">
+            <div class="step-title">打开克隆面板</div>
+            <div class="step-desc">点击顶部 <code>File → Clone Repo</code>，或首页点击 <code>Clone a Repo</code>。</div>
+        </div>
+        <div class="step">
+            <div class="step-title">选择来源</div>
+            <div class="step-desc">
+                方式一：选择已关联的平台（GitHub/GitLab/Bitbucket），浏览选择仓库<br>
+                方式二：直接输入 URL（HTTPS 或 SSH）
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-title">设置本地路径</div>
+            <div class="step-desc">在 <code>Browse</code> 中选择本地存放目录。</div>
+        </div>
+        <div class="step">
+            <div class="step-title">点击 Clone</div>
+            <div class="step-desc">克隆完成后点击 <code>Open Now</code> 打开仓库。</div>
+        </div>
+    </div>
+
+    <div class="code-block">
+        <span class="lang-label">bash</span>
+<pre><span class="cmt"># 对应的 Git 命令</span>
+<span class="kw">git</span> clone https://github.com/user/repo.git /path/to/local</pre>
+    </div>
+
+    <h3><span class="icon">4.2</span> 打开本地仓库</h3>
+    <div class="steps">
+        <div class="step">
+            <div class="step-title">打开已有仓库</div>
+            <div class="step-desc">点击 <code>File → Open Repo</code>，选择本地包含 <code>.git</code> 目录的文件夹。</div>
+        </div>
+        <div class="step">
+            <div class="step-title">初始化新仓库</div>
+            <div class="step-desc">点击 <code>File → Init Repo</code>，选择目录并初始化。可选择是否添加 <code>.gitignore</code> 模板和 LICENSE 文件。</div>
+        </div>
+        <div class="step">
+            <div class="step-title">最近打开</div>
+            <div class="step-desc">首页会显示最近打开的仓库列表，点击即可快速打开。</div>
+        </div>
+    </div>
+
+    <h3><span class="icon">4.3</span> 添加远程仓库</h3>
+    <p>在左侧面板 <code>Remotes</code> 旁点击 <code>+</code> 号可添加新的远程源：</p>
+    <div class="code-block">
+        <span class="lang-label">bash</span>
+<pre><span class="cmt"># 对应的 Git 命令</span>
+<span class="kw">git</span> remote add upstream https://github.com/original/repo.git</pre>
+    </div>
+
+    <div class="callout callout-tip">
+        <span class="callout-icon">💡</span>
+        <div class="callout-content">
+            <div class="callout-title">Fork 工作流常用配置</div>
+            Fork 开源项目时，通常 <code>origin</code> 指向你的 Fork 仓库，<code>upstream</code> 指向原项目仓库。这样可以方便地从 upstream 拉取最新代码并推送到自己的 origin。
+        </div>
+    </div>
+</section>
+
+<!-- ===== 5. 提交与暂存 ===== -->
+<section class="section" id="commit">
+    <div class="section-header">
+        <span class="section-number">5</span>
+        <h2>提交与暂存</h2>
+    </div>
+
+    <h3><span class="icon">5.1</span> 查看文件变更</h3>
+    <p>当你在工作目录中修改了文件后，GitKraken 会自动检测到变更，并在提交图顶部显示 <code>// WIP</code> 节点，同时在右上角显示 <code>"N file changes"</code> 提示。</p>
+    <p>点击 <code>// WIP</code> 节点，右侧面板会展开显示所有变更文件。</p>
+
+    <h3><span class="icon">5.2</span> 暂存文件（Stage）</h3>
+    <p>GitKraken 提供了精细化的暂存控制：</p>
+
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>操作</th>
+                    <th>说明</th>
+                    <th>操作方式</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>暂存全部</td>
+                    <td>将所有修改加入暂存区</td>
+                    <td>点击 <code>Stage all changes</code> 按钮</td>
+                </tr>
+                <tr>
+                    <td>暂存单个文件</td>
+                    <td>将指定文件加入暂存区</td>
+                    <td>点击文件名右侧的 <code>Stage file</code> 按钮</td>
+                </tr>
+                <tr>
+                    <td>暂存代码块（Hunk）</td>
+                    <td>将文件中的部分修改加入暂存区</td>
+                    <td>展开文件 Diff，点击代码块右侧的 <code>+</code> 按钮</td>
+                </tr>
+                <tr>
+                    <td>暂存单行</td>
+                    <td>将某一行修改加入暂存区</td>
+                    <td>展开文件 Diff，点击行号右侧的 <code>+</code> 按钮</td>
+                </tr>
+                <tr>
+                    <td>撤销暂存</td>
+                    <td>将已暂存的文件移回未暂存</td>
+                    <td>点击 Staged 区文件右侧的 <code>Unstage</code> 按钮</td>
+                </tr>
+                <tr>
+                    <td>丢弃修改</td>
+                    <td>放弃文件的修改（不可恢复）</td>
+                    <td>点击文件右侧的 <code>Discard</code> 按钮</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="callout callout-warn">
+        <span class="callout-icon">⚠️</span>
+        <div class="callout-content">
+            <div class="callout-title">Discard 操作不可逆</div>
+            <code>Discard</code> 会永久丢弃文件的修改，无法通过任何方式恢复。使用前请确认你确实不需要这些更改。
+        </div>
+    </div>
+
+    <h3><span class="icon">5.3</span> 提交（Commit）</h3>
+    <div class="steps">
+        <div class="step">
+            <div class="step-title">暂存文件</div>
+            <div class="step-desc">先将需要提交的文件 Stage 到暂存区。</div>
+        </div>
+        <div class="step">
+            <div class="step-title">输入提交信息</div>
+            <div class="step-desc">在右侧 <code>Commit Message</code> 输入框中填写提交摘要（第一行）和详细描述（空行后）。</div>
+        </div>
+        <div class="step">
+            <div class="step-title">执行提交</div>
+            <div class="step-desc">点击 <code>Commit</code> 按钮，或使用快捷键 <kbd>Ctrl</kbd>+<kbd>Enter</kbd>（macOS: <kbd>Cmd</kbd>+<kbd>Enter</kbd>）。</div>
+        </div>
+    </div>
+
+    <div class="code-block">
+        <span class="lang-label">bash</span>
+<pre><span class="cmt"># 对应的 Git 命令</span>
+<span class="kw">git</span> add .
+<span class="kw">git</span> commit -m <span class="str">"提交摘要"</span> -m <span class="str">"详细描述"</span></pre>
+    </div>
+
+    <h3><span class="icon">5.4</span> 修改上次提交（Amend）</h3>
+    <p>如果提交后发现遗漏了文件或提交信息写错了，可以修改最近一次提交：</p>
+    <div class="steps">
+        <div class="step">
+            <div class="step-title">勾选 Amend</div>
+            <div class="step-desc">在提交面板底部勾选 <code>Amend previous commit</code> 复选框。</div>
+        </div>
+        <div class="step">
+            <div class="step-title">暂存新文件（可选）</div>
+            <div class="step-desc">如果有遗漏的文件，先将其 Stage。</div>
+        </div>
+        <div class="step">
+            <div class="step-title">修改提交信息</div>
+            <div class="step-desc">在 Commit Message 中修改提交信息。</div>
+        </div>
+        <div class="step">
+            <div class="step-title">提交</div>
+            <div class="step-desc">点击 Commit 按钮，GitKraken 会用新提交替换上次提交。</div>
+        </div>
+    </div>
+
+    <div class="callout callout-warn">
+        <span class="callout-icon">⚠️</span>
+        <div class="callout-content">
+            <div class="callout-title">Amend 注意事项</div>
+            如果上次的提交已经 Push 到远程，Amend 后需要 <code>Force Push</code>。这会覆盖远程历史，可能影响其他协作者。仅在本地未推送的提交上使用 Amend。
+        </div>
+    </div>
+
+    <h3><span class="icon">5.5</span> 提交信息规范建议</h3>
+    <div class="code-block">
+        <span class="lang-label">text</span>
+<pre><span class="var">&lt;type&gt;</span>(<span class="var">&lt;scope&gt;</span>): <span class="var">&lt;subject&gt;</span>
+
+<span class="var">&lt;body&gt;</span>
+
+<span class="var">&lt;footer&gt;</span></pre>
+    </div>
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr><th>type</th><th>说明</th></tr>
+            </thead>
+            <tbody>
+                <tr><td><code>feat</code></td><td>新功能</td></tr>
+                <tr><td><code>fix</code></td><td>Bug 修复</td></tr>
+                <tr><td><code>docs</code></td><td>文档变更</td></tr>
+                <tr><td><code>style</code></td><td>代码格式（不影响功能）</td></tr>
+                <tr><td><code>refactor</code></td><td>重构（既不是新功能也不是修 Bug）</td></tr>
+                <tr><td><code>test</code></td><td>测试相关</td></tr>
+                <tr><td><code>chore</code></td><td>构建/工具/依赖变更</td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<!-- ===== 6. 分支管理 ===== -->
+<section class="section" id="branch">
+    <div class="section-header">
+        <span class="section-number">6</span>
+        <h2>分支管理</h2>
+    </div>
+
+    <h3><span class="icon">6.1</span> 创建分支</h3>
+    <p>GitKraken 提供多种创建分支的方式：</p>
+    <ul>
+        <li><strong>方式一</strong>：点击顶部工具栏的 <code>Branch</code> 按钮，输入分支名后按 <kbd>Enter</kbd></li>
+        <li><strong>方式二</strong>：在提交图中右键点击某个提交节点，选择 <code>Create branch here</code></li>
+        <li><strong>方式三</strong>：在左侧 Branches 面板右键，选择 <code>Create branch</code></li>
+    </ul>
+
+    <div class="code-block">
+        <span class="lang-label">bash</span>
+<pre><span class="cmt"># 对应的 Git 命令</span>
+<span class="kw">git</span> branch feature/login
+<span class="kw">git</span> checkout feature/login
+<span class="cmt"># 或者合并为一条</span>
+<span class="kw">git</span> checkout -b feature/login</pre>
+    </div>
+
+    <div class="callout callout-tip">
+        <span class="callout-icon">💡</span>
+        <div class="callout-content">
+            <div class="callout-title">从特定提交创建分支</div>
+            右键点击提交图中的任意提交节点，选择 <code>Create branch here</code>，可以基于历史中的某个时间点创建分支，非常适合用于修复旧版本的 Bug。
+        </div>
+    </div>
+
+    <h3><span class="icon">6.2</span> 切换分支（Checkout）</h3>
+    <ul>
+        <li><strong>双击分支名</strong>：在左侧面板双击分支名即可切换</li>
+        <li><strong>右键 → Checkout</strong>：右键点击分支选择 Checkout</li>
+        <li><strong>双击提交节点</strong>：直接双击提交图中的节点，会切换到该提交所在的分支</li>
+    </ul>
+
+    <h3><span class="icon">6.3</span> 重命名分支</h3>
+    <ul>
+        <li>右键点击本地分支 → <code>Rename</code> → 输入新名称</li>
+    </ul>
+    <div class="code-block">
+        <span class="lang-label">bash</span>
+<pre><span class="kw">git</span> branch -m old-name new-name</pre>
+    </div>
+
+    <h3><span class="icon">6.4</span> 删除分支</h3>
+    <ul>
+        <li>右键点击本地分支 → <code>Delete</code></li>
+    </ul>
+    <div class="callout callout-warn">
+        <span class="callout-icon">⚠️</span>
+        <div class="callout-content">
+            <div class="callout-title">删除分支注意</div>
+            不能删除当前所在分支。如果分支有未合并的提交，GitKraken 会提示警告。强制删除需使用 <code>git branch -D</code>。
+        </div>
+    </div>
+
+    <h3><span class="icon">6.5</span> 设置上游分支</h3>
+    <p>推送本地分支到远程时，GitKraken 会自动设置上游跟踪关系。也可以手动设置：</p>
+    <ul>
+        <li>右键点击本地分支 → <code>Set Upstream</code> → 选择远程分支</li>
+    </ul>
+
+    <h3><span class="icon">6.6</span> Cherry-pick（拣选）</h3>
+    <p>Cherry-pick 可以将某个分支上的特定提交应用到当前分支，而不需要合并整个分支：</p>
+    <div class="steps">
+        <div class="step">
+            <div class="step-title">切换到目标分支</div>
+            <div class="step-desc">先 Checkout 到你想要应用提交的分支。</div>
+        </div>
+        <div class="step">
+            <div class="step-title">右键点击源提交</div>
+            <div class="step-desc">在提交图中找到要拣选的提交，右键点击。</div>
+        </div>
+        <div class="step">
+            <div class="step-title">选择 Cherry-pick</div>
+            <div class="step-desc">点击 <code>Cherry-pick commit</code>，该提交会被应用到当前分支。</div>
+        </div>
+    </div>
+    <div class="code-block">
+        <span class="lang-label">bash</span>
+<pre><span class="kw">git</span> cherry-pick &lt;commit-sha&gt;</pre>
+    </div>
+</section>
+
+<!-- ===== 7. 合并与变基 ===== -->
+<section class="section" id="merge">
+    <div class="section-header">
+        <span class="section-number">7</span>
+        <h2>合并与变基</h2>
+    </div>
+
+    <h3><span class="icon">7.1</span> 合并（Merge）</h3>
+    <p>将一个分支的修改合并到当前分支。GitKraken 支持直观的拖拽合并：</p>
+    <div class="steps">
+        <div class="step">
+            <div class="step-title">切换到目标分支</div>
+            <div class="step-desc">先 Checkout 到合并的目标分支（如 <code>main</code>）。</div>
+        </div>
+        <div class="step">
+            <div class="step-title">拖拽源分支</div>
+            <div class="step-desc">在左侧面板或提交图中，将源分支（如 <code>feature/login</code>）拖拽到目标分支上。</div>
+        </div>
+        <div class="step">
+            <div class="step-title">选择 Merge</div>
+            <div class="step-desc">在弹出菜单中选择 <code>Merge source-branch into target-branch</code>。</div>
+        </div>
+    </div>
+
+    <p>也可以右键点击源分支，选择 <code>Merge source-branch into target-branch</code>。</p>
+
+    <div class="code-block">
+        <span class="lang-label">bash</span>
+<pre><span class="cmt"># 先切换到目标分支</span>
+<span class="kw">git</span> checkout main
+<span class="cmt"># 合并源分支</span>
+<span class="kw">git</span> merge feature/login</pre>
+    </div>
+
+    <h3><span class="icon">7.2</span> 变基（Rebase）</h3>
+    <p>变基会将当前分支的提交"移植"到目标分支的最新提交之上，使提交历史保持线性。</p>
+    <div class="steps">
+        <div class="step">
+            <div class="step-title">切换到源分支</div>
+            <div class="step-desc">Checkout 到需要变基的分支（如 <code>feature/login</code>）。</div>
+        </div>
+        <div class="step">
+            <div class="step-title">拖拽到目标分支</div>
+            <div class="step-desc">将源分支拖拽到目标分支（如 <code>main</code>）上。</div>
+        </div>
+        <div class="step">
+            <div class="step-title">选择 Rebase</div>
+            <div class="step-desc">在弹出菜单中选择 <code>Rebase source-branch onto target-branch</code>。</div>
+        </div>
+    </div>
+
+    <div class="code-block">
+        <span class="lang-label">bash</span>
+<pre><span class="cmt"># 先切换到源分支</span>
+<span class="kw">git</span> checkout feature/login
+<span class="cmt"># 变基到目标分支</span>
+<span class="kw">git</span> rebase main</pre>
+    </div>
+
+    <div class="callout callout-warn">
+        <span class="callout-icon">⚠️</span>
+        <div class="callout-content">
+            <div class="callout-title">Merge vs Rebase 选择</div>
+            <ul>
+                <li><strong>Merge</strong>：保留完整的分支历史，适合公共分支和团队协作</li>
+                <li><strong>Rebase</strong>：产生线性的提交历史，适合个人功能分支整理</li>
+                <li><strong>黄金法则</strong>：不要对已推送到远程的公共分支执行 Rebase！</li>
+            </ul>
+        </div>
+    </div>
+
+    <h3><span class="icon">7.3</span> 回退提交（Revert）</h3>
+    <p>Revert 会创建一个新的提交来撤销之前的修改，不会改变提交历史：</p>
+    <ul>
+        <li>右键点击提交节点 → <code>Revert commit</code></li>
+    </ul>
+    <div class="code-block">
+        <span class="lang-label">bash</span>
+<pre><span class="kw">git</span> revert &lt;commit-sha&gt;</pre>
+    </div>
+
+    <h3><span class="icon">7.4</span> 重置（Reset）</h3>
+    <p>Reset 会将当前分支指针移动到指定提交，有三种模式：</p>
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>模式</th>
+                    <th>暂存区</th>
+                    <th>工作区</th>
+                    <th>说明</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Soft</strong></td>
+                    <td>保留</td>
+                    <td>保留</td>
+                    <td>仅移动 HEAD 指针，修改保留在暂存区</td>
+                </tr>
+                <tr>
+                    <td><strong>Mixed</strong>（默认）</td>
+                    <td>清除</td>
+                    <td>保留</td>
+                    <td>移动 HEAD，暂存区清空，修改保留在工作区</td>
+                </tr>
+                <tr>
+                    <td><strong>Hard</strong></td>
+                    <td>清除</td>
+                    <td>清除</td>
+                    <td>完全重置，所有修改丢失（不可恢复）</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <p>操作方式：右键点击目标提交 → <code>Reset branch to this commit</code> → 选择模式。</p>
+
+    <div class="callout callout-danger">
+        <span class="callout-icon">🚫</span>
+        <div class="callout-content">
+            <div class="callout-title">Hard Reset 危险</div>
+            <code>Hard Reset</code> 会永久丢弃工作区和暂存区的所有修改，且无法通过 <code>git reflog</code> 恢复被丢弃的工作区修改。务必谨慎使用。
+        </div>
+    </div>
+</section>
+
+<!-- ===== 8. 远程操作 ===== -->
+<section class="section" id="remote">
+    <div class="section-header">
+        <span class="section-number">8</span>
+        <h2>远程操作</h2>
+    </div>
+
+    <h3><span class="icon">8.1</span> Fetch（获取）</h3>
+    <p>Fetch 从远程仓库下载最新信息，但不会修改本地工作区。它可以让你了解远程分支的最新状态。</p>
+    <ul>
+        <li>点击顶部工具栏的 <code>Fetch</code> 按钮</li>
+        <li>或快捷键 <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd></li>
+    </ul>
+    <div class="code-block">
+        <span class="lang-label">bash</span>
+<pre><span class="kw">git</span> fetch --all
+<span class="kw">git</span> fetch origin</pre>
+    </div>
+
+    <h3><span class="icon">8.2</span> Pull（拉取）</h3>
+    <p>Pull = Fetch + Merge，从远程拉取并合并到当前分支。</p>
+    <ul>
+        <li>点击顶部工具栏的 <code>Pull</code> 按钮</li>
+        <li>可选择 <code>Pull (fast-forward only)</code> 或 <code>Pull (no fast-forward)</code></li>
+    </ul>
+    <div class="code-block">
+        <span class="lang-label">bash</span>
+<pre><span class="kw">git</span> pull origin main
+<span class="cmt"># fast-forward only</span>
+<span class="kw">git</span> pull --ff-only origin main
+<span class="cmt"># no fast-forward（总是创建合并提交）</span>
+<span class="kw">git</span> pull --no-ff origin main</pre>
+    </div>
+
+    <h3><span class="icon">8.3</span> Push（推送）</h3>
+    <p>将本地提交推送到远程仓库。</p>
+    <ul>
+        <li>点击顶部工具栏的 <code>Push</code> 按钮</li>
+        <li>首次推送新分支时，GitKraken 会提示设置上游分支</li>
+    </ul>
+    <div class="code-block">
+        <span class="lang-label">bash</span>
+<pre><span class="cmt"># 推送当前分支</span>
+<span class="kw">git</span> push origin feature/login
+
+<span class="cmt"># 首次推送并设置上游</span>
+<span class="kw">git</span> push -u origin feature/login
+
+<span class="cmt"># 强制推送（Rebase 或 Amend 后使用）</span>
+<span class="kw">git</span> push --force-with-lease origin feature/login</pre>
+    </div>
+
+    <div class="callout callout-warn">
+        <span class="callout-icon">⚠️</span>
+        <div class="callout-content">
+            <div class="callout-title">Force Push 风险</div>
+            Force Push 会覆盖远程历史，可能导致其他协作者的工作丢失。GitKraken 提供 <code>Force Push</code> 选项，使用时需格外谨慎。推荐使用 <code>--force-with-lease</code> 而非 <code>--force</code>。
+        </div>
+    </div>
+
+    <h3><span class="icon">8.4</span> Fast-Forward vs No Fast-Forward</h3>
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr><th>模式</th><th>行为</th><th>提交历史</th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Fast-Forward</td>
+                    <td>直接移动分支指针，不创建合并提交</td>
+                    <td>线性，无合并节点</td>
+                </tr>
+                <tr>
+                    <td>No Fast-Forward</td>
+                    <td>即使可以快进，也创建合并提交</td>
+                    <td>保留分支拓扑，有合并节点</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<!-- ===== 9. 冲突解决 ===== -->
+<section class="section" id="conflict">
+    <div class="section-header">
+        <span class="section-number">9</span>
+        <h2>冲突解决</h2>
+    </div>
+
+    <p>当合并或变基时，如果两个分支修改了同一文件的同一区域，Git 无法自动合并，就会产生冲突。GitKraken 提供了强大的内置合并工具来帮助你解决冲突。</p>
+
+    <h3><span class="icon">9.1</span> 冲突界面</h3>
+    <p>当冲突发生时，GitKraken 会自动打开合并工具，界面分为四列：</p>
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr><th>列</th><th>内容</th><th>说明</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>左列（A）</td><td>当前分支（Local/Target）的版本</td><td>你当前所在分支的内容</td></tr>
+                <tr><td>中列（Output）</td><td>合并结果预览</td><td>解决冲突后的最终文件内容</td></tr>
+                <tr><td>右列（B）</td><td>源分支（Remote/Source）的版本</td><td>被合并分支的内容</td></tr>
+                <tr><td>底部</td><td>冲突文件列表</td><td>所有存在冲突的文件</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3><span class="icon">9.2</span> 解决冲突操作</h3>
+    <p>对于每个冲突块，你可以：</p>
+    <div class="card-grid">
+        <div class="card">
+            <div class="card-icon">⬅</div>
+            <div class="card-title">使用左侧（A）</div>
+            <div class="card-desc">保留当前分支的修改，丢弃源分支的修改</div>
+        </div>
+        <div class="card">
+            <div class="card-icon">➡</div>
+            <div class="card-title">使用右侧（B）</div>
+            <div class="card-desc">保留源分支的修改，丢弃当前分支的修改</div>
+        </div>
+        <div class="card">
+            <div class="card-icon">⬅➡</div>
+            <div class="card-title">同时保留两侧</div>
+            <div class="card-desc">两个分支的修改都保留，按顺序排列</div>
+        </div>
+        <div class="card">
+            <div class="card-icon">✏️</div>
+            <div class="card-title">手动编辑</div>
+            <div class="card-desc">在中间列直接编辑合并结果</div>
+        </div>
+        <div class="card">
+            <div class="card-icon">🗑</div>
+            <div class="card-title">删除冲突块</div>
+            <div class="card-desc">完全移除冲突区域的代码</div>
+        </div>
+        <div class="card">
+            <div class="card-icon">↩️</div>
+            <div class="card-title">撤销选择</div>
+            <div class="card-desc">回到冲突的初始状态，重新选择</div>
+        </div>
+    </div>
+
+    <h3><span class="icon">9.3</span> 解决流程</h3>
+    <div class="steps">
+        <div class="step">
+            <div class="step-title">查看冲突文件列表</div>
+            <div class="step-desc">底部面板显示所有冲突文件，点击文件名查看冲突详情。</div>
+        </div>
+        <div class="step">
+            <div class="step-title">逐块解决冲突</div>
+            <div class="step-desc">对每个冲突块选择保留方案（A / B / 两者 / 手动编辑）。</div>
+        </div>
+        <div class="step">
+            <div class="step-title">保存</div>
+            <div class="step-desc">所有冲突解决后，点击 <code>Save</code>。</div>
+        </div>
+        <div class="step">
+            <div class="step-title">暂存并提交</div>
+            <div class="step-desc">GitKraken 会自动将解决后的文件加入暂存区，输入提交信息并提交。</div>
+        </div>
+        <div class="step">
+            <div class="step-title">继续合并/变基</div>
+            <div class="step-desc">如果是变基过程中的冲突，提交后点击 <code>Continue rebasing</code> 继续。</div>
+        </div>
+    </div>
+
+    <h3><span class="icon">9.4</span> 中止合并/变基</h3>
+    <p>如果冲突太复杂或你想放弃操作，可以中止：</p>
+    <ul>
+        <li>中止合并：<code>git merge --abort</code></li>
+        <li>中止变基：<code>git rebase --abort</code></li>
+    </ul>
+    <p>在 GitKraken 中，冲突界面顶部会显示 <code>Abort</code> 按钮。</p>
+</section>
+
+<!-- ===== 10. Pull Request ===== -->
+<section class="section" id="pr">
+    <div class="section-header">
+        <span class="section-number">10</span>
+        <h2>Pull Request 管理</h2>
+    </div>
+
+    <p>GitKraken 6.5.1 内置了 PR/MR 管理功能，支持在客户端直接发起、浏览、审查 Pull Request，无需切换到浏览器。</p>
+
+    <div class="callout callout-info">
+        <span class="callout-icon">ℹ️</span>
+        <div class="callout-content">
+            <div class="callout-title">前提条件</div>
+            使用 PR 功能前，需要在 <code>Preferences → Integrations</code> 中关联对应的 Git 托管平台（GitHub / GitLab / Bitbucket）。
+        </div>
+    </div>
+
+    <h3><span class="icon">10.1</span> 发起 PR</h3>
+    <div class="steps">
+        <div class="step">
+            <div class="step-title">推送分支</div>
+            <div class="step-desc">先将你的功能分支 Push 到远程仓库。</div>
+        </div>
+        <div class="step">
+            <div class="step-title">点击 PR 按钮</div>
+            <div class="step-desc">在顶部工具栏点击 <code>Pull Request</code> 按钮，或左侧面板 <code>Pull Requests</code> 旁的 <code>+</code> 号。</div>
+        </div>
+        <div class="step">
+            <div class="step-title">填写 PR 信息</div>
+            <div class="step-desc">
+                选择目标分支（Target：如 <code>main</code>）和源分支（Source：你的功能分支）<br>
+                填写 PR 标题和描述
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-title">提交</div>
+            <div class="step-desc">点击 <code>Create Pull Request</code>。</div>
+        </div>
+    </div>
+
+    <h3><span class="icon">10.2</span> 查看 PR</h3>
+    <p>在左侧面板 <code>Pull Requests</code> 分组中，可以查看所有 PR 的状态：</p>
+    <ul>
+        <li><strong>Open</strong>：待处理的 PR</li>
+        <li><strong>Merged</strong>：已合并的 PR</li>
+        <li><strong>Closed</strong>：已关闭的 PR</li>
+    </ul>
+
+    <h3><span class="icon">10.3</span> 审查 PR</h3>
+    <p>点击 PR 条目可在右侧面板查看详情：</p>
+    <ul>
+        <li>查看 PR 描述和变更文件</li>
+        <li>查看提交历史和 Diff</li>
+        <li>添加评论</li>
+        <li>Approve / Request Changes</li>
+        <li>Merge PR（如果权限允许）</li>
+    </ul>
+
+    <h3><span class="icon">10.4</span> Checkout PR 分支</h3>
+    <p>在 PR 列表中右键点击某个 PR，选择 <code>Checkout PR branch</code>，可以将 PR 的分支检出到本地进行测试和验证。</p>
+</section>
+
+<!-- ===== 11. Stash 储藏 ===== -->
+<section class="section" id="stash">
+    <div class="section-header">
+        <span class="section-number">11</span>
+        <h2>Stash 储藏</h2>
+    </div>
+
+    <p>当你正在某个分支上工作，但需要临时切换到其他分支处理紧急问题时，可以使用 Stash 将当前未完成的修改暂时储藏起来。</p>
+
+    <h3><span class="icon">11.1</span> 创建 Stash</h3>
+    <div class="steps">
+        <div class="step">
+            <div class="step-title">点击 Stash 按钮</div>
+            <div class="step-desc">点击顶部工具栏的 <code>Stash</code> 按钮，或右键 <code>Stashes</code> → <code>Stash changes</code>。</div>
+        </div>
+        <div class="step">
+            <div class="step-title">输入名称（可选）</div>
+            <div class="step-desc">可以为 Stash 命名以便后续识别，默认名称为分支名 + 提交信息。</div>
+        </div>
+        <div class="step">
+            <div class="step-title">确认</div>
+            <div class="step-desc">工作区的修改会被储藏，工作区恢复到 HEAD 状态。</div>
+        </div>
+    </div>
+
+    <div class="code-block">
+        <span class="lang-label">bash</span>
+<pre><span class="kw">git</span> stash save <span class="str">"WIP: login feature"</span></pre>
+    </div>
+
+    <h3><span class="icon">11.2</span> 应用 Stash</h3>
+    <ul>
+        <li><strong>Apply Stash</strong>：应用储藏但保留储藏记录</li>
+        <li><strong>Pop Stash</strong>：应用储藏并删除储藏记录</li>
+    </ul>
+    <p>操作方式：在左侧 <code>Stashes</code> 面板中右键点击 Stash 条目，选择 Apply 或 Pop。</p>
+
+    <div class="code-block">
+        <span class="lang-label">bash</span>
+<pre><span class="cmt"># 应用（保留记录）</span>
+<span class="kw">git</span> stash apply stash@{0}
+
+<span class="cmt"># 弹出（删除记录）</span>
+<span class="kw">git</span> stash pop stash@{0}</pre>
+    </div>
+
+    <h3><span class="icon">11.3</span> 删除 Stash</h3>
+    <ul>
+        <li>右键点击 Stash → <code>Delete stash</code></li>
+    </ul>
+    <div class="code-block">
+        <span class="lang-label">bash</span>
+<pre><span class="kw">git</span> stash drop stash@{0}</pre>
+    </div>
+
+    <h3><span class="icon">11.4</span> Stash 包含未跟踪文件</h3>
+    <p>默认情况下，Stash 只包含已跟踪文件的修改。如果需要包含未跟踪的新文件：</p>
+    <div class="code-block">
+        <span class="lang-label">bash</span>
+<pre><span class="kw">git</span> stash save -u <span class="str">"include untracked"</span></pre>
+    </div>
+</section>
+
+<!-- ===== 12. SSH 密钥配置 ===== -->
+<section class="section" id="ssh">
+    <div class="section-header">
+        <span class="section-number">12</span>
+        <h2>SSH 密钥配置</h2>
+    </div>
+
+    <p>使用 SSH 方式连接远程仓库可以免去每次输入密码的麻烦。GitKraken 6.5.1 内置了 SSH 密钥管理功能。</p>
+
+    <h3><span class="icon">12.1</span> 生成 SSH 密钥</h3>
+    <div class="steps">
+        <div class="step">
+            <div class="step-title">打开 SSH 设置</div>
+            <div class="step-desc"><code>File → Preferences → Authentication → SSH</code></div>
+        </div>
+        <div class="step">
+            <div class="step-title">选择 Generate</div>
+            <div class="step-desc">点击 <code>Generate new key and add to SSH agent</code>。</div>
+        </div>
+        <div class="step">
+            <div class="step-title">填写信息</div>
+            <div class="step-desc">输入密钥名称和 passphrase（可选），选择密钥类型（推荐 ED25519 或 RSA 4096）。</div>
+        </div>
+        <div class="step">
+            <div class="step-title">添加到平台</div>
+            <div class="step-desc">点击 <code>Copy Public Key</code>，然后粘贴到 GitHub/GitLab 的 SSH Keys 设置中。</div>
+        </div>
+    </div>
+
+    <p>也可以使用命令行生成：</p>
+    <div class="code-block">
+        <span class="lang-label">bash</span>
+<pre><span class="cmt"># 生成 ED25519 密钥（推荐）</span>
+<span class="kw">ssh-keygen</span> -t ed25519 -C <span class="str">"your_email@example.com"</span>
+
+<span class="cmt"># 生成 RSA 4096 密钥</span>
+<span class="kw">ssh-keygen</span> -t rsa -b 4096 -C <span class="str">"your_email@example.com"</span>
+
+<span class="cmt"># 密钥默认存储在</span>
+<span class="cmt"># Windows: C:\Users\用户名\.ssh\id_ed25519</span>
+<span class="cmt"># macOS/Linux: ~/.ssh/id_ed25519</span></pre>
+    </div>
+
+    <h3><span class="icon">12.2</span> 在 GitKraken 中配置 SSH</h3>
+    <div class="steps">
+        <div class="step">
+            <div class="step-title">打开 SSH 配置</div>
+            <div class="step-desc"><code>Preferences → Authentication → SSH</code></div>
+        </div>
+        <div class="step">
+            <div class="step-title">选择 SSH 私钥</div>
+            <div class="step-desc">点击 <code>Browse</code>，选择 <code>~/.ssh/id_ed25519</code>（或 <code>id_rsa</code>）。</div>
+        </div>
+        <div class="step">
+            <div class="step-title">选择 SSH Agent</div>
+            <div class="step-desc">
+                <strong>GitKraken</strong>：使用内置 SSH Agent（推荐）<br>
+                <strong>System</strong>：使用系统 SSH Agent
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-title">测试连接</div>
+            <div class="step-desc">Clone 一个 SSH URL 的仓库测试是否配置成功。</div>
+        </div>
+    </div>
+
+    <h3><span class="icon">12.3</span> SSH vs HTTPS</h3>
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr><th>对比项</th><th>SSH</th><th>HTTPS</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>认证方式</td><td>密钥对</td><td>用户名 + 密码/Token</td></tr>
+                <tr><td>是否需要每次输入</td><td>否（密钥自动认证）</td><td>否（凭据管理器缓存）</td></tr>
+                <tr><td>防火墙兼容性</td><td>较差（需开放 22 端口）</td><td>好（使用 443 端口）</td></tr>
+                <tr><td>安全性</td><td>高（密钥不可窃取）</td><td>中（依赖密码强度）</td></tr>
+                <tr><td>推荐场景</td><td>日常开发</td><td>企业网络/受限环境</td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<!-- ===== 13. GitFlow 工作流 ===== -->
+<section class="section" id="gitflow">
+    <div class="section-header">
+        <span class="section-number">13</span>
+        <h2>GitFlow 工作流</h2>
+    </div>
+
+    <p>GitFlow 是一种广泛使用的 Git 分支管理模型，GitKraken 内置了对 GitFlow 的原生支持。</p>
+
+    <h3><span class="icon">13.1</span> GitFlow 分支模型</h3>
+    <div class="ui-diagram">
+        <svg viewBox="0 0 800 300" xmlns="http://www.w3.org/2000/svg">
+            <!-- main 分支线 -->
+            <line x1="50" y1="50" x2="750" y2="50" stroke="#f1502f" stroke-width="3"/>
+            <circle cx="80" cy="50" r="6" fill="#f1502f"/>
+            <circle cx="700" cy="50" r="6" fill="#f1502f"/>
+            <text x="20" y="55" fill="#f1502f" font-size="13" font-weight="bold" font-family="sans-serif">main</text>
+            <text x="720" y="55" fill="#f1502f" font-size="11" font-family="sans-serif">v1.0</text>
+
+            <!-- develop 分支线 -->
+            <line x1="80" y1="130" x2="700" y2="130" stroke="#3fb950" stroke-width="3"/>
+            <circle cx="80" cy="130" r="6" fill="#3fb950"/>
+            <circle cx="700" cy="130" r="6" fill="#3fb950"/>
+            <text x="15" y="135" fill="#3fb950" font-size="13" font-weight="bold" font-family="sans-serif">develop</text>
+
+            <!-- 连接线 main-develop -->
+            <line x1="80" y1="56" x2="80" y2="124" stroke="#8b949e" stroke-width="2" stroke-dasharray="4,3"/>
+            <line x1="700" y1="56" x2="700" y2="124" stroke="#8b949e" stroke-width="2" stroke-dasharray="4,3"/>
+
+            <!-- feature 分支 -->
+            <line x1="200" y1="124" x2="230" y2="200" stroke="#bc8cff" stroke-width="2"/>
+            <line x1="230" y1="200" x2="400" y2="200" stroke="#bc8cff" stroke-width="3"/>
+            <line x1="400" y1="200" x2="430" y2="136" stroke="#bc8cff" stroke-width="2"/>
+            <circle cx="230" cy="200" r="5" fill="#bc8cff"/>
+            <circle cx="400" cy="200" r="5" fill="#bc8cff"/>
+            <text x="250" y="225" fill="#bc8cff" font-size="11" font-family="sans-serif">feature/login</text>
+
+            <!-- release 分支 -->
+            <line x1="500" y1="124" x2="530" y2="80" stroke="#d29922" stroke-width="2"/>
+            <line x1="530" y1="80" x2="650" y2="80" stroke="#d29922" stroke-width="3"/>
+            <line x1="650" y1="80" x2="680" y2="56" stroke="#d29922" stroke-width="2"/>
+            <line x1="650" y1="80" x2="680" y2="124" stroke="#d29922" stroke-width="2"/>
+            <circle cx="530" cy="80" r="5" fill="#d29922"/>
+            <circle cx="650" cy="80" r="5" fill="#d29922"/>
+            <text x="540" y="72" fill="#d29922" font-size="11" font-family="sans-serif">release/1.0</text>
+
+            <!-- hotfix 分支 -->
+            <line x1="600" y1="56" x2="630" y2="250" stroke="#db6d28" stroke-width="2"/>
+            <line x1="630" y1="250" x2="720" y2="250" stroke="#db6d28" stroke-width="3"/>
+            <line x1="720" y1="250" x2="740" y2="56" stroke="#db6d28" stroke-width="2"/>
+            <line x1="720" y1="250" x2="740" y2="124" stroke="#db6d28" stroke-width="2"/>
+            <circle cx="630" cy="250" r="5" fill="#db6d28"/>
+            <circle cx="720" cy="250" r="5" fill="#db6d28"/>
+            <text x="640" y="275" fill="#db6d28" font-size="11" font-family="sans-serif">hotfix/1.0.1</text>
+
+            <!-- 图例 -->
+            <rect x="10" y="270" width="780" height="0" fill="none"/>
+        </svg>
+    </div>
+
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr><th>分支类型</th><th>命名规范</th><th>来源分支</th><th>合并目标</th><th>用途</th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>main</code></td>
+                    <td>main / master</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>生产环境代码，只接受 release 和 hotfix 合并</td>
+                </tr>
+                <tr>
+                    <td><code>develop</code></td>
+                    <td>develop</td>
+                    <td>main</td>
+                    <td>release</td>
+                    <td>日常开发集成分支</td>
+                </tr>
+                <tr>
+                    <td><code>feature</code></td>
+                    <td>feature/*</td>
+                    <td>develop</td>
+                    <td>develop</td>
+                    <td>新功能开发</td>
+                </tr>
+                <tr>
+                    <td><code>release</code></td>
+                    <td>release/*</td>
+                    <td>develop</td>
+                    <td>main + develop</td>
+                    <td>发布准备（版本号、文档等）</td>
+                </tr>
+                <tr>
+                    <td><code>hotfix</code></td>
+                    <td>hotfix/*</td>
+                    <td>main</td>
+                    <td>main + develop</td>
+                    <td>生产环境紧急修复</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3><span class="icon">13.2</span> 在 GitKraken 中初始化 GitFlow</h3>
+    <div class="steps">
+        <div class="step">
+            <div class="step-title">打开 GitFlow 配置</div>
+            <div class="step-desc">点击左侧面板的 <code>Git Flow</code> 按钮，或 <code>File → Preferences → Git Flow</code>。</div>
+        </div>
+        <div class="step">
+            <div class="step-title">配置分支名称</div>
+            <div class="step-desc">设置 main、develop 分支名，以及 feature、release、hotfix 的前缀（通常保持默认）。</div>
+        </div>
+        <div class="step">
+            <div class="step-title">点击 Init</div>
+            <div class="step-desc">GitKraken 会自动创建 develop 分支并设置 GitFlow 配置。</div>
+        </div>
+    </div>
+
+    <h3><span class="icon">13.3</span> 使用 GitFlow 操作</h3>
+    <p>初始化后，左侧面板的 <code>Git Flow</code> 按钮会提供以下快捷操作：</p>
+    <ul>
+        <li><strong>New Feature</strong>：创建新的 feature 分支（自动从 develop 创建）</li>
+        <li><strong>Finish Feature</strong>：完成 feature（自动合并回 develop）</li>
+        <li><strong>New Release</strong>：创建 release 分支</li>
+        <li><strong>Finish Release</strong>：完成 release（合并到 main + develop，打标签）</li>
+        <li><strong>New Hotfix</strong>：创建 hotfix 分支</li>
+        <li><strong>Finish Hotfix</strong>：完成 hotfix（合并到 main + develop，打标签）</li>
+    </ul>
+</section>
+
+<!-- ===== 14. 快捷键速查 ===== -->
+<section class="section" id="shortcuts">
+    <div class="section-header">
+        <span class="section-number">14</span>
+        <h2>快捷键速查</h2>
+    </div>
+
+    <h3><span class="icon">14.1</span> 通用快捷键</h3>
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr><th>快捷键</th><th>Windows / Linux</th><th>macOS</th><th>功能</th></tr>
+            </thead>
+            <tbody>
+                <tr><td><kbd>Ctrl</kbd>+<kbd>Enter</kbd></td><td>✓</td><td><kbd>Cmd</kbd>+<kbd>Enter</kbd></td><td>提交（Commit）</td></tr>
+                <tr><td><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>S</kbd></td><td>✓</td><td><kbd>Cmd</kbd>+<kbd>Shift</kbd>+<kbd>S</kbd></td><td>暂存全部（Stage All）</td></tr>
+                <tr><td><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd></td><td>✓</td><td><kbd>Cmd</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd></td><td>获取（Fetch）</td></tr>
+                <tr><td><kbd>Ctrl</kbd>+<kbd>1</kbd></td><td>✓</td><td><kbd>Cmd</kbd>+<kbd>1</kbd></td><td>打开仓库</td></tr>
+                <tr><td><kbd>Ctrl</kbd>+<kbd>2</kbd></td><td>✓</td><td><kbd>Cmd</kbd>+<kbd>2</kbd></td><td>克隆仓库</td></tr>
+                <tr><td><kbd>Ctrl</kbd>+<kbd>3</kbd></td><td>✓</td><td><kbd>Cmd</kbd>+<kbd>3</kbd></td><td>初始化仓库</td></tr>
+                <tr><td><kbd>Ctrl</kbd>+<kbd>N</kbd></td><td>✓</td><td><kbd>Cmd</kbd>+<kbd>N</kbd></td><td>新标签页</td></tr>
+                <tr><td><kbd>Ctrl</kbd>+<kbd>W</kbd></td><td>✓</td><td><kbd>Cmd</kbd>+<kbd>W</kbd></td><td>关闭标签页</td></tr>
+                <tr><td><kbd>Ctrl</kbd>+<kbd>,</kbd></td><td>✓</td><td><kbd>Cmd</kbd>+<kbd>,</kbd></td><td>打开偏好设置</td></tr>
+                <tr><td><kbd>Ctrl</kbd>+<kbd>F</kbd></td><td>✓</td><td><kbd>Cmd</kbd>+<kbd>F</kbd></td><td>搜索提交</td></tr>
+                <tr><td><kbd>Esc</kbd></td><td>✓</td><td>✓</td><td>取消/关闭面板</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3><span class="icon">14.2</span> 分支与提交操作</h3>
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr><th>快捷键</th><th>Windows / Linux</th><th>macOS</th><th>功能</th></tr>
+            </thead>
+            <tbody>
+                <tr><td><kbd>Ctrl</kbd>+<kbd>B</kbd></td><td>✓</td><td><kbd>Cmd</kbd>+<kbd>B</kbd></td><td>创建分支</td></tr>
+                <tr><td>双击分支名</td><td>✓</td><td>✓</td><td>切换分支</td></tr>
+                <tr><td>双击提交节点</td><td>✓</td><td>✓</td><td>切换到该提交所在分支</td></tr>
+                <tr><td>右键提交 → Cherry-pick</td><td>✓</td><td>✓</td><td>拣选提交</td></tr>
+                <tr><td>右键提交 → Revert</td><td>✓</td><td>✓</td><td>回退提交</td></tr>
+                <tr><td>右键提交 → Reset</td><td>✓</td><td>✓</td><td>重置到此提交</td></tr>
+                <tr><td>拖拽分支到分支</td><td>✓</td><td>✓</td><td>合并/变基</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3><span class="icon">14.3</span> 文件与 Diff 操作</h3>
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr><th>操作</th><th>功能</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>点击文件名</td><td>展开/折叠 Diff 视图</td></tr>
+                <tr><td>Diff 中点击 <kbd>+</kbd></td><td>暂存该行/块</td></tr>
+                <tr><td>Diff 中点击 <kbd>−</kbd></td><td>撤销暂存该行/块</td></tr>
+                <tr><td>点击 <code>Edit</code></td><td>在外部编辑器中打开文件</td></tr>
+                <tr><td>右键文件 → View History</td><td>查看文件历史</td></tr>
+                <tr><td>右键文件 → Blame</td><td>查看文件每行的最后修改者</td></tr>
+                <tr><td>右键文件 → Open in File Manager</td><td>在文件管理器中打开</td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<!-- ===== 15. 常见问题 ===== -->
+<section class="section" id="faq">
+    <div class="section-header">
+        <span class="section-number">15</span>
+        <h2>常见问题（FAQ）</h2>
+    </div>
+
+    <h3><span class="icon">Q1</span> GitKraken 6.5.1 还能免费打开私有仓库吗？</h3>
+    <p><strong>可以。</strong> 6.5.1 是最后一个免费支持私有仓库的版本。从 6.5.2 开始，免费版仅支持公开仓库，私有仓库需要 Pro 许可证。如果你需要免费管理私有仓库，请保持使用 6.5.1 版本。</p>
+
+    <h3><span class="icon">Q2</span> 如何关闭自动更新？</h3>
+    <p>GitKraken 6.5.1 默认会检查更新。如果不想升级到收费版本，可以在 <code>Preferences → General</code> 中关闭自动更新。如果已被提示更新，请点击 <code>Skip</code> 或 <code>Remind me later</code>。</p>
+
+    <h3><span class="icon">Q3</span> 提交图太慢 / 大仓库卡顿怎么办？</h3>
+    <div class="callout callout-tip">
+        <span class="callout-icon">💡</span>
+        <div class="callout-content">
+            <ul>
+                <li>在 <code>Preferences → General</code> 中减少 <code>Max commits to load</code>（默认加载更多提交）</li>
+                <li>关闭 <code>Show remote branches</code> 以减少渲染节点</li>
+                <li>使用 <code>Search / Filter</code> 过滤特定分支</li>
+                <li>对超大仓库考虑使用浅克隆 <code>git clone --depth 1</code></li>
+            </ul>
+        </div>
+    </div>
+
+    <h3><span class="icon">Q4</span> Push 时提示 "Permission denied" 怎么办？</h3>
+    <p>通常是 SSH 密钥未正确配置。检查步骤：</p>
+    <ul>
+        <li>确认 <code>~/.ssh/id_ed25519</code>（或 <code>id_rsa</code>）存在且有读权限</li>
+        <li>确认公钥已添加到 GitHub/GitLab 的 SSH Keys 设置</li>
+        <li>在 GitKraken <code>Preferences → SSH</code> 中确认私钥路径正确</li>
+        <li>在终端执行 <code>ssh -T git@github.com</code> 测试连接</li>
+    </ul>
+
+    <h3><span class="icon">Q5</span> 如何查看文件的历史修改记录（File History）？</h3>
+    <p>在提交面板中右键点击文件 → <code>View File History</code>，GitKraken 会在提交图中仅显示涉及该文件的提交，方便追踪文件的变更历史。</p>
+
+    <h3><span class="icon">Q6</span> 如何查看每行代码是谁写的（Blame）？</h3>
+    <p>右键点击文件 → <code>Blame</code>，GitKraken 会打开 Blame 视图，显示每行代码的最后修改者和提交信息。</p>
+
+    <h3><span class="icon">Q7</span> 如何配置 .gitignore？</h3>
+    <p>方式一：在 GitKraken 中右键未跟踪文件 → <code>Ignore</code>（可选择仅忽略此文件或同类文件）</p>
+    <p>方式二：直接编辑项目根目录的 <code>.gitignore</code> 文件</p>
+    <p>方式三：在 <code>File → .gitignore</code> 中编辑（如仓库已关联）</p>
+
+    <h3><span class="icon">Q8</span> 如何撤销已经 Push 的提交？</h3>
+    <p>推荐使用 <code>Revert</code>（右键提交 → Revert commit），它会创建一个新的提交来撤销之前的修改，不会破坏提交历史。不推荐使用 Reset + Force Push，因为会影响其他协作者。</p>
+
+    <h3><span class="icon">Q9</span> GitKraken 6.5.1 支持 Gitee（码云）吗？</h3>
+    <p>GitKraken 官方集成的平台是 GitHub、GitLab、Bitbucket 和 Azure DevOps。对于 Gitee，可以通过 URL 方式 Clone（HTTPS 或 SSH），PR 管理功能不支持，但所有 Git 基本操作（提交、推送、拉取、合并等）完全可用。</p>
+
+    <h3><span class="icon">Q10</span> 如何在多台电脑间同步 GitKraken 配置？</h3>
+    <p>登录同一个 GitKraken 账号，部分偏好设置和关联的平台账号会自动同步。但 SSH 密钥、本地路径等需要手动配置。</p>
+</section>
+
+</div>
+
+<!-- 页脚 -->
+<div class="footer">
+    <p>🦑 GitKraken 6.5.1 使用手册 · 生成于 2026-07-13</p>
+    <p>本手册基于 GitKraken 6.5.1 版本编写，供学习和参考使用</p>
+</div>
+
+</div>
+
+<script>
+    // 侧边栏导航高亮
+    const sections = document.querySelectorAll('.section');
+    const navLinks = document.querySelectorAll('.sidebar nav a');
+
+    window.addEventListener('scroll', () => {
+        let current = '';
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop - 100;
+            if (window.scrollY >= sectionTop) {
+                current = section.getAttribute('id');
+            }
+        });
+
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === '#' + current) {
+                link.classList.add('active');
+            }
+        });
+    });
+
+    // 平滑滚动
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

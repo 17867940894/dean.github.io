@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JMeter 必装插件 · 从下载安装到实战使用（小白教程）</title>
+<style>
+  :root{
+    --bg:#f5f6fa; --card:#ffffff;
+    --primary:#ff6b35; --primary-dark:#e85a25; --primary-light:#fff0ea;
+    --blue:#2563eb; --blue-light:#eaf1ff;
+    --purple:#7c3aed; --green:#16a34a; --warn:#f59e0b; --danger:#dc2626;
+    --text:#2b2d42; --muted:#6b7280; --border:#e9ecef;
+    --radius:14px; --shadow:0 4px 24px rgba(255,107,53,.08);
+    --code-bg:#1e293b; --code-text:#e2e8f0;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;
+    background:var(--bg); color:var(--text); line-height:1.75;
+  }
+
+  /* ── 顶部导航 ── */
+  .topnav{
+    position:sticky; top:0; z-index:100;
+    background:rgba(255,255,255,.92); backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--border);
+    display:flex; align-items:center; gap:6px;
+    padding:10px 24px; overflow-x:auto; white-space:nowrap;
+    box-shadow:0 1px 8px rgba(0,0,0,.04);
+  }
+  .topnav a{
+    color:var(--muted); text-decoration:none; font-size:.88rem;
+    padding:6px 12px; border-radius:8px; transition:.2s; font-weight:500;
+  }
+  .topnav a:hover{background:var(--primary-light); color:var(--primary-dark)}
+  .topnav a.active{background:var(--primary); color:#fff}
+
+  /* ── HERO ── */
+  .hero{
+    background:linear-gradient(135deg,#ff6b35 0%,#f7931e 55%,#ffb627 100%);
+    color:#fff; padding:56px 40px 50px; text-align:center; position:relative; overflow:hidden;
+  }
+  .hero::before{
+    content:''; position:absolute; inset:0;
+    background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    pointer-events:none;
+  }
+  .hero .badge{
+    display:inline-block; background:rgba(255,255,255,.22);
+    border-radius:100px; padding:5px 16px; font-size:.85rem;
+    margin-bottom:16px; backdrop-filter:blur(4px);
+  }
+  .hero h1{font-size:2.4rem; font-weight:800; letter-spacing:-.5px; position:relative}
+  .hero p{margin-top:12px; font-size:1.05rem; opacity:.92; position:relative; max-width:680px; margin-left:auto; margin-right:auto}
+  .hero .meta{margin-top:20px; display:flex; justify-content:center; gap:14px; flex-wrap:wrap; position:relative}
+  .hero .meta span{background:rgba(255,255,255,.2); border-radius:100px; padding:5px 16px; font-size:.85rem}
+
+  /* ── 布局 ── */
+  .container{max-width:980px; margin:0 auto; padding:40px 22px 80px}
+
+  /* ── 章节标题 ── */
+  .sec-title{
+    font-size:1.55rem; font-weight:800; margin:52px 0 8px;
+    display:flex; align-items:center; gap:12px; scroll-margin-top:70px;
+  }
+  .sec-title .num{
+    width:38px; height:38px; border-radius:11px; flex-shrink:0;
+    background:linear-gradient(135deg,var(--primary),#f7931e);
+    color:#fff; display:grid; place-items:center; font-size:1.05rem; font-weight:800;
+    box-shadow:0 4px 12px rgba(255,107,53,.35);
+  }
+  .sec-desc{color:var(--muted); margin:0 0 24px 50px; font-size:.96rem}
+
+  h3{font-size:1.18rem; font-weight:700; margin:32px 0 12px; color:#1f2937; scroll-margin-top:70px}
+  h4{font-size:1.02rem; font-weight:700; margin:22px 0 10px; color:#374151}
+  p{margin:10px 0}
+  ul,ol{margin:10px 0 10px 26px}
+  li{margin:6px 0}
+
+  /* ── 卡片 ── */
+  .card{
+    background:var(--card); border-radius:var(--radius);
+    box-shadow:var(--shadow); padding:24px 26px; margin:18px 0;
+    border-left:4px solid var(--primary);
+  }
+  .card.blue{border-left-color:var(--blue)}
+  .card.green{border-left-color:var(--green)}
+  .card.purple{border-left-color:var(--purple)}
+  .card.warn{border-left-color:var(--warn)}
+
+  /* ── 提示框 ── */
+  .tip{
+    border-radius:12px; padding:16px 18px 16px 52px; margin:16px 0;
+    position:relative; font-size:.94rem;
+  }
+  .tip::before{content:''; position:absolute; left:16px; top:14px; width:24px; height:24px; border-radius:50%}
+  .tip-info{background:var(--blue-light); border:1px solid #c7dbff}
+  .tip-info::before{content:'i'; font-weight:800; color:var(--blue); display:grid; place-items:center; font-style:italic}
+  .tip-warn{background:#fff8ec; border:1px solid #ffe2b3}
+  .tip-warn::before{content:'!'; font-weight:800; color:var(--warn); display:grid; place-items:center}
+  .tip-ok{background:#ecfdf5; border:1px solid #a7f3d0}
+  .tip-ok::before{content:'✓'; font-weight:800; color:var(--green); display:grid; place-items:center}
+  .tip b{font-weight:700}
+
+  /* ── 代码块 ── */
+  pre{
+    background:var(--code-bg); color:var(--code-text);
+    border-radius:12px; padding:18px 20px; margin:14px 0;
+    overflow-x:auto; font-size:.86rem; line-height:1.6;
+    font-family:'Cascadia Code','Fira Code','Consolas',monospace;
+    position:relative;
+  }
+  pre .cm{color:#64748b}
+  pre .kw{color:#f472b6}
+  pre .str{color:#86efac}
+  pre .num{color:#fbbf24}
+  code{
+    background:#f1f3f9; color:#c026d3; padding:2px 7px; border-radius:6px;
+    font-size:.88em; font-family:'Cascadia Code','Consolas',monospace;
+  }
+  pre code{background:none; color:inherit; padding:0}
+
+  /* ── 步骤 ── */
+  .steps{counter-reset:step; margin:18px 0; padding-left:0; list-style:none}
+  .steps li{
+    position:relative; padding:14px 16px 14px 56px; margin:10px 0;
+    background:var(--card); border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,.04);
+    counter-increment:step;
+  }
+  .steps li::before{
+    content:counter(step); position:absolute; left:14px; top:13px;
+    width:30px; height:30px; border-radius:50%;
+    background:linear-gradient(135deg,var(--primary),#f7931e); color:#fff;
+    display:grid; place-items:center; font-weight:800; font-size:.9rem;
+  }
+
+  /* ── 插件卡片网格 ── */
+  .plug-grid{
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:18px; margin:22px 0;
+  }
+  .plug-card{
+    background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow);
+    overflow:hidden; transition:transform .2s, box-shadow .2s; border-top:4px solid var(--primary);
+  }
+  .plug-card:hover{transform:translateY(-4px); box-shadow:0 12px 36px rgba(255,107,53,.16)}
+  .plug-card.blue{border-top-color:var(--blue)}
+  .plug-card.purple{border-top-color:var(--purple)}
+  .plug-card.green{border-top-color:var(--green)}
+  .plug-card.warn{border-top-color:var(--warn)}
+  .plug-head{padding:18px 20px 12px; display:flex; align-items:center; gap:12px}
+  .plug-emoji{width:42px; height:42px; border-radius:11px; background:var(--primary-light); display:grid; place-items:center; font-size:1.4rem; flex-shrink:0}
+  .plug-card.blue .plug-emoji{background:var(--blue-light)}
+  .plug-card.purple .plug-emoji{background:#f3e8ff}
+  .plug-card.green .plug-emoji{background:#dcfce7}
+  .plug-card.warn .plug-emoji{background:#fef3c7}
+  .plug-name{font-size:1.05rem; font-weight:700}
+  .plug-en{font-size:.78rem; color:var(--muted); margin-top:2px}
+  .plug-body{padding:0 20px 18px; font-size:.92rem}
+  .plug-tag{
+    display:inline-block; font-size:.72rem; font-weight:600;
+    padding:2px 9px; border-radius:100px; margin:2px 3px 2px 0;
+  }
+  .tag-must{background:#fee2e2; color:#dc2626}
+  .tag-hot{background:#ffedd5; color:#ea580c}
+  .tag-rec{background:#dbeafe; color:#2563eb}
+
+  /* ── 表格 ── */
+  table{width:100%; border-collapse:collapse; margin:16px 0; font-size:.9rem; background:var(--card); border-radius:10px; overflow:hidden; box-shadow:0 2px 10px rgba(0,0,0,.04)}
+  th{background:linear-gradient(135deg,var(--primary),#f7931e); color:#fff; padding:11px 14px; text-align:left; font-weight:600}
+  th:first-child{border-radius:0}
+  td{padding:10px 14px; border-bottom:1px solid var(--border)}
+  tr:last-child td{border-bottom:none}
+  tr:nth-child(even) td{background:#fafbfc}
+
+  /* ── 锚点高亮 ── */
+  :target{animation:flash 1.2s ease}
+  @keyframes flash{0%{background:var(--primary-light)}100%{background:transparent}}
+
+  /* ── 回到顶部 ── */
+  #totop{
+    position:fixed; right:24px; bottom:24px; z-index:90;
+    width:46px; height:46px; border-radius:50%; border:none; cursor:pointer;
+    background:linear-gradient(135deg,var(--primary),#f7931e); color:#fff;
+    font-size:1.3rem; box-shadow:0 6px 20px rgba(255,107,53,.4);
+    opacity:0; pointer-events:none; transition:opacity .3s, transform .2s;
+  }
+  #totop.show{opacity:1; pointer-events:auto}
+  #totop:hover{transform:translateY(-3px)}
+
+  /* ── 页脚 ── */
+  .footer{
+    text-align:center; padding:32px 20px; color:var(--muted); font-size:.86rem;
+    border-top:1px solid var(--border); margin-top:40px;
+  }
+  .footer a{color:var(--primary-dark); text-decoration:none}
+  .footer a:hover{text-decoration:underline}
+
+  .kbd{
+    display:inline-block; background:#fff; border:1px solid #cbd5e1;
+    border-bottom-width:2px; border-radius:6px; padding:1px 8px;
+    font-size:.84em; font-family:inherit; color:#475569; box-shadow:0 1px 0 #cbd5e1;
+  }
+  .compare{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:18px 0}
+  .compare>div{padding:16px; border-radius:12px}
+  .compare .bad{background:#fef2f2; border:1px solid #fecaca}
+  .compare .good{background:#f0fdf4; border:1px solid #bbf7d0}
+  .compare h5{font-size:.95rem; margin-bottom:8px; font-weight:700}
+  .compare .bad h5{color:#dc2626}
+  .compare .good h5{color:#16a34a}
+  @media(max-width:640px){.compare{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- 顶部导航 -->
+<nav class="topnav" id="topnav">
+  <a href="#why">为什么装插件</a>
+  <a href="#overview">插件全景</a>
+  <a href="#pm-install">安装管理器</a>
+  <a href="#pm-use">通用安装流程</a>
+  <a href="#ctg">自定义线程组</a>
+  <a href="#graphs">基础图表</a>
+  <a href="#tst">吞吐量定时器</a>
+  <a href="#dummy">模拟采样器</a>
+  <a href="#combat">实战串联</a>
+  <a href="#faq">常见问题</a>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <span class="badge">JMeter 性能测试 · 小白入门</span>
+  <h1>JMeter 必装插件教程</h1>
+  <p>从下载、安装到实战使用，覆盖几乎每个 JMeter 使用者都会安装的几个核心插件。零基础也能跟着一步步做完。</p>
+  <div class="meta">
+    <span>适用 JMeter 5.x</span>
+    <span>Windows / Mac 通用</span>
+    <span>更新于 2026-07</span>
+  </div>
+</header>
+
+<main class="container">
+
+<!-- ============ 为什么需要插件 ============ -->
+<section id="why">
+  <h2 class="sec-title"><span class="num">?</span>JMeter 自带的，为什么还不够？</h2>
+  <p class="sec-desc">一句话：原生 JMeter 缺了「阶梯加压」和「看得顺眼的图表」这两件性能测试的刚需。</p>
+
+  <div class="card warn">
+    <p>你用纯原生 JMeter 跑压测，很快会遇到三个让人抓狂的痛点：</p>
+    <ol>
+      <li><b>加压方式太死板</b> —— 原生线程组只能「一次性把所有用户在 Ramp-up 时间内均匀上线」，没法做「先上 50 个稳一会儿，再上到 100，再稳一会儿」这种<b>阶梯式加压</b>。而阶梯加压恰恰是找性能拐点、找瓶颈的标准姿势。</li>
+      <li><b>图表难看且不够用</b> —— 自带的「察看结果树」「聚合报告」给的是表格，原生图形顶多画个折线，<b>响应时间随时间变化、TPS 随时间变化、活跃线程数随时间变化</b>这类关键趋势图原生没有现成的。</li>
+      <li><b>没法精确控制吞吐量</b> —— 你想「精确维持每秒 50 个请求」，原生定时器做不到平滑控制。</li>
+    </ol>
+  </div>
+
+  <p>社区早就替你把这些坑填好了，统称为 <b>JMeter Plugins</b>（jmeter-plugins.org）。而这些插件几乎都通过一个「插件管理器」来一键安装。所以这套东西是<b>几乎所有认真用 JMeter 的人都会装</b>的。</p>
+
+  <div class="tip tip-info">
+    <b>关键认知：</b>先装「插件管理器（Plugins Manager）」这一个 jar，之后所有插件都在 JMeter 菜单里勾选、点安装即可，不用再手动下 jar 包。管理器是「插件中的插件」，是地基。
+  </div>
+</section>
+
+<!-- ============ 插件全景 ============ -->
+<section id="overview">
+  <h2 class="sec-title"><span class="num">01</span>必装插件全景</h2>
+  <p class="sec-desc">下面这 5 个，是从上百个插件里筛出来的「人人必装」清单。</p>
+
+  <div class="plug-grid">
+    <div class="plug-card">
+      <div class="plug-head">
+        <div class="plug-emoji">🧰</div>
+        <div><div class="plug-name">插件管理器</div><div class="plug-en">JMeter Plugins Manager</div></div>
+      </div>
+      <div class="plug-body">
+        <span class="plug-tag tag-must">地基·必装</span>
+        <p>安装其他所有插件的总入口。装了它，剩下插件全是菜单里点一下的事。不装它，后面啥都玩不转。</p>
+      </div>
+    </div>
+
+    <div class="plug-card blue">
+      <div class="plug-head">
+        <div class="plug-emoji">📈</div>
+        <div><div class="plug-name">自定义线程组</div><div class="plug-en">Custom Thread Groups</div></div>
+      </div>
+      <div class="plug-body">
+        <span class="plug-tag tag-hot">高频·刚需</span>
+        <p>提供「阶梯加压线程组」「极限线程组」，能精细编排加压曲线。做性能测试绕不开它。</p>
+      </div>
+    </div>
+
+    <div class="plug-card green">
+      <div class="plug-head">
+        <div class="plug-emoji">📊</div>
+        <div><div class="plug-name">基础图表</div><div class="plug-en">3 Basic Graphs</div></div>
+      </div>
+      <div class="plug-body">
+        <span class="plug-tag tag-hot">高频·刚需</span>
+        <p>响应时间趋势图、TPS 趋势图、活跃线程数趋势图。压测报告的「标配三件套」。</p>
+      </div>
+    </div>
+
+    <div class="plug-card purple">
+      <div class="plug-head">
+        <div class="plug-emoji">⏱️</div>
+        <div><div class="plug-name">吞吐量定时器</div><div class="plug-en">Throughput Shaping Timer</div></div>
+      </div>
+      <div class="plug-body">
+        <span class="plug-tag tag-rec">推荐</span>
+        <p>按时间编排 RPS/TPS 目标，精确控制每秒请求数，做容量规划、SLA 验证必备。</p>
+      </div>
+    </div>
+
+    <div class="plug-card warn">
+      <div class="plug-head">
+        <div class="plug-emoji">🎭</div>
+        <div><div class="plug-name">模拟采样器</div><div class="plug-en">Dummy Sampler</div></div>
+      </div>
+      <div class="plug-body">
+        <span class="plug-tag tag-rec">推荐</span>
+        <p>不真正发请求就能「伪造」一条采样结果，调试脚本、演示图表时省时省力。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="tip tip-info">
+    <b>安装顺序：</b>第 1 个「插件管理器」是手动下载的，其余 4 个都在管理器里勾选安装。下面分步来。
+  </div>
+</section>
+
+<!-- ============ 安装插件管理器 ============ -->
+<section id="pm-install">
+  <h2 class="sec-title"><span class="num">02</span>安装插件管理器（保姆级）</h2>
+  <p class="sec-desc">这是唯一需要手动下载的步骤，5 分钟搞定。装完它，后面全是点点点。</p>
+
+  <h3>第 1 步：确认 JMeter 安装目录</h3>
+  <p>先找到你的 JMeter 安装根目录（也就是解压后里面有 <code>bin</code>、<code>lib</code> 等文件夹的那个目录）。例如：</p>
+  <pre><span class="cm"># Windows 示例</span>
+D:\tools\apache-jmeter-5.5\
+
+<span class="cm"># Mac 示例</span>
+~/tools/apache-jmeter-5.5/</pre>
+  <p>进入该目录，你应该能看到 <code>lib</code> 文件夹，再进去会看到 <code>ext</code> 子文件夹——插件管理器的 jar 包就要放到这个 <code>lib/ext</code> 里。</p>
+
+  <h3>第 2 步：下载插件管理器 jar 包</h3>
+  <ol class="steps">
+    <li>打开浏览器，访问官方下载页：<code>https://jmeter-plugins.org/install/Install/</code></li>
+    <li>页面中间有一个大大的下载按钮（类似 <b>“Plugins Manager jar”</b>），点击下载，得到一个类似 <code>JMeterPlugins-Manager-1.10.jar</code> 的文件（版本号会随时间变化，下最新的即可）。</li>
+    <li>把这个 jar 文件放到 JMeter 的 <code>lib/ext</code> 目录下。完整路径例如：<code>D:\tools\apache-jmeter-5.5\lib\ext\JMeterPlugins-Manager-1.10.jar</code></li>
+  </ol>
+
+  <div class="tip tip-warn">
+    <b>别放错地方：</b>一定要放在 <code>lib/ext</code>，不是 <code>lib</code> 根目录，也不是 <code>bin</code>。放错位置 JMeter 启动后菜单里不会出现管理器。
+  </div>
+
+  <h3>第 3 步：重启 JMeter</h3>
+  <ul>
+    <li>如果 JMeter 正开着，先<b>完全关闭</b>它（不只是关窗口，确认进程退出）。</li>
+    <li>重新双击 <code>bin/jmeter.bat</code>（Mac 执行 <code>sh jmeter.sh</code>）启动。</li>
+  </ul>
+
+  <h3>第 4 步：验证安装成功</h3>
+  <p>启动后，看顶部菜单栏：</p>
+  <div class="card green">
+    <p>点击菜单 <span class="kbd">Options</span>（选项） → 如果下拉里出现了 <b>“Plugins Manager”</b> 这一项，<b>说明安装成功</b>，地基已经打好。</p>
+    <p>点击它，会弹出一个「Plugins Manager」对话框，里面有 <b>Installed（已安装）</b> 和 <b>Available（可安装）</b> 两个标签页，列出上百个插件——这就是后面所有插件的安装入口。</p>
+  </div>
+
+  <div class="tip tip-ok">
+    <b>到这一步，你已经跨过了最大的坎。</b>从这里开始，所有插件都是「在 Plugins Manager 里打勾 → 点 Apply Changes and Restart JMeter」就完事，再也不用手动下 jar 包了。
+  </div>
+</section>
+
+<!-- ============ 通用安装流程 ============ -->
+<section id="pm-use">
+  <h2 class="sec-title"><span class="num">03</span>通用安装流程（所有插件通用）</h2>
+  <p class="sec-desc">后面每个插件的安装都是这套流程，记住一次，用一百次。</p>
+
+  <ol class="steps">
+    <li>菜单 <span class="kbd">Options</span> → <span class="kbd">Plugins Manager</span>，打开管理器窗口。</li>
+    <li>切到 <b>Available</b> 标签页，在搜索框输入插件名（例如 <code>Custom Thread Groups</code>）。</li>
+    <li>在结果列表里找到目标插件，<b>勾选</b>它前面的复选框。</li>
+    <li>（可选）继续搜索并勾选其他插件，可以一次性批量安装。</li>
+    <li>点右下角 <b>“Apply Changes and Restart JMeter”</b> 按钮。</li>
+    <li>JMeter 会自动下载、安装并重启。重启后，新插件对应的元件就会出现在「添加」菜单里了。</li>
+  </ol>
+
+  <div class="tip tip-info">
+    <b>装完怎么找？</b>每个插件安装后会以特定前缀出现在 JMeter 的「添加（Add）」菜单里。社区插件通常以 <code>jp@gc -</code> 开头，比如 <code>jp@gc - Response Times Over Time</code>。看到这个前缀，就是插件装好了。
+  </div>
+</section>
+
+<!-- ============ 自定义线程组 ============ -->
+<section id="ctg">
+  <h2 class="sec-title"><span class="num">04</span>自定义线程组：阶梯加压</h2>
+  <p class="sec-desc">最该先装、用得最多的插件。让加压曲线可以「分台阶」走。</p>
+
+  <h3>它能解决什么问题</h3>
+  <div class="compare">
+    <div class="bad">
+      <h5>原生线程组</h5>
+      <p>100 个用户在 60 秒内<b>匀速</b>上线，曲线是一条直线。看不出「50 用户时系统还好，100 用户时崩了」这种<b>拐点</b>。</p>
+    </div>
+    <div class="good">
+      <h5>阶梯加压线程组</h5>
+      <p>可以先上 20 个、稳跑 60 秒，再上到 40、再稳 60 秒……一步步逼近极限，<b>精准定位拐点</b>。</p>
+    </div>
+  </div>
+
+  <h3>安装</h3>
+  <p>在 Plugins Manager 搜索 <code>Custom Thread Groups</code>，勾选安装，重启。</p>
+
+  <h3>它提供的两个核心元件</h3>
+  <table>
+    <tr><th>元件名</th><th>用途</th></tr>
+    <tr><td><b>jp@gc - Stepping Thread Group</b>（阶梯线程组）</td><td>最常用。设置一系列「加几人 + 持续多久」的台阶，逐级加压。</td></tr>
+    <tr><td><b>jp@gc - Ultimate Thread Group</b>（极限线程组）</td><td>更灵活，可为每个线程批次独立设置「启动数、爬升时间、保持时间、关闭数、关闭时间」，适合复杂加压脚本。</td></tr>
+  </table>
+
+  <h3>实战：用 Stepping Thread Group 做阶梯加压</h3>
+  <ol class="steps">
+    <li>在测试计划上右键 → <span class="kbd">Add</span> → <span class="kbd">Thread(s)</span> → <span class="kbd">jp@gc - Stepping Thread Group</span>。</li>
+    <li>看到一张「台阶」参数表，每行一个台阶。重点参数含义如下：</li>
+  </ol>
+
+  <pre><span class="cm"># Stepping Thread Group 参数说明</span>
+This group will start N threads   <span class="cm"># 本组最终上线总线程数</span>
+First, wait for N seconds          <span class="cm"># 启动后先等多少秒（预热等待）</span>
+Then add N threads every N seconds, using ramp-up N seconds  <span class="cm"># 每 N 秒增加 N 个线程，单次爬升耗时 N 秒</span>
+Then hold load for N seconds       <span class="cm"># 加满后保持多久</span>
+Finally, stop N threads every N seconds <span class="cm"># 优雅退场，每 N 秒停 N 个</span></pre>
+
+  <p>举个配置示例，模拟「每 30 秒加 10 个用户、加到 100、保持 5 分钟、再慢慢退」：</p>
+  <pre><span class="cm"># 示例配置</span>
+This group will start <span class="num">100</span> threads
+First, wait for <span class="num">5</span> seconds
+Then add <span class="num">10</span> threads every <span class="num">30</span> seconds, using ramp-up <span class="num">5</span> seconds
+Then hold load for <span class="num">300</span> seconds
+Finally, stop <span class="num">10</span> threads every <span class="num">20</span> seconds</pre>
+
+  <ol class="steps" start="3">
+    <li>配好台阶后，下方会有一个<b>实时预览的加压曲线图</b>，直观显示线程数随时间变化——这是个超好用的可视化确认。</li>
+    <li>在这个线程组里像平时一样添加「HTTP 请求」取样器、监听器等，运行即可看到阶梯效果。</li>
+  </ol>
+
+  <div class="tip tip-info">
+    <b>小白要点：</b>阶梯加压的意义是「<b>边加边观察</b>」。配合下一节的「响应时间趋势图」「TPS 趋势图」，你就能清楚看到：加到 60 个用户时响应时间开始飙升 / TPS 开始掉——那个点就是系统的<b>性能拐点</b>，也是你写测试报告的核心结论。
+  </div>
+</section>
+
+<!-- ============ 基础图表 ============ -->
+<section id="graphs">
+  <h2 class="sec-title"><span class="num">05</span>基础图表：让压测结果「看得见」</h2>
+  <p class="sec-desc">3 Basic Graphs + 5 Additional Graphs，加压有了，结果也得画出来。</p>
+
+  <h3>安装</h3>
+  <p>在 Plugins Manager 分别搜索并勾选安装这两个插件包：</p>
+  <ul>
+    <li><code>3 Basic Graphs</code> —— 基础三图</li>
+    <li><code>5 Additional Graphs</code> —— 进阶五图（推荐一起装，画图更全）</li>
+  </ul>
+
+  <h3>安装后你会得到这些监听器</h3>
+  <table>
+    <tr><th>插件包</th><th>监听器（添加 → Listener 里找）</th><th>看什么</th></tr>
+    <tr><td rowspan="3"><b>3 Basic Graphs</b></td>
+        <td><code>jp@gc - Response Times Over Time</code></td><td>响应时间随时间变化曲线</td></tr>
+    <tr><td><code>jp@gc - Transactions Per Second</code></td><td>每秒事务数（TPS）随时间变化</td></tr>
+    <tr><td><code>jp@gc - Active Threads Over Time</code></td><td>活跃线程数随时间变化</td></tr>
+    <tr><td rowspan="5"><b>5 Additional Graphs</b></td>
+        <td><code>jp@gc - Response Times Percentiles</code></td><td>响应时间百分位（P90/P95/P99）</td></tr>
+    <tr><td><code>jp@gc - Response Time Distribution</code></td><td>响应时间分布直方图</td></tr>
+    <tr><td><code>jp@gc - Hits per Second</code></td><td>每秒点击数</td></tr>
+    <tr><td><code>jp@gc - Latencies Over Time</code></td><td>延迟（首字节时间）趋势</td></tr>
+    <tr><td><code>jp@gc - Connect Times Over Time</code></td><td>建连耗时趋势</td></tr>
+  </table>
+
+  <h3>实战：添加并查看图表</h3>
+  <ol class="steps">
+    <li>在线程组（或测试计划）上右键 → <span class="kbd">Add</span> → <span class="kbd">Listener</span> → 选 <code>jp@gc - Response Times Over Time</code>。</li>
+    <li>同理再加 <code>jp@gc - Transactions Per Second</code> 和 <code>jp@gc - Active Threads Over Time</code>。</li>
+    <li>点击工具栏 ▶ 运行测试。</li>
+    <li>运行过程中，点击对应监听器，曲线会<b>实时刷新</b>。能直观看到：用户越加越多时，响应时间是否被拉长、TPS 是否还能扛住。</li>
+  </ol>
+
+  <div class="tip tip-ok">
+    <b>读图诀窍（拐点判断法）：</b>把「活跃线程数图」和「TPS 图」「响应时间图」三张对齐看——线程数线性上涨时，<b>TPS 不再涨甚至掉头向下、响应时间开始陡升的那个时刻</b>，就是系统接近极限的拐点。这比只看聚合报告里的平均值高级得多。
+  </div>
+
+  <div class="tip tip-warn">
+    <b>GUI 运行注意：</b>图形监听器比较吃内存，线程数很大时 GUI 会卡。调脚本阶段用 GUI 看图没问题；<b>真正大压力跑分时要用命令行模式</b>（<code>jmeter -n -t xxx.jmx -l log.jtl</code>），再用 <code>-g log.jtl -o report</code> 生成 HTML 报告，里面这些图都有。
+  </div>
+</section>
+
+<!-- ============ 吞吐量定时器 ============ -->
+<section id="tst">
+  <h2 class="sec-title"><span class="num">06</span>吞吐量定时器：精确控 TPS</h2>
+  <p class="sec-desc">当你需要「不是加多少人，而是维持每秒多少请求」时，它登场。</p>
+
+  <h3>为什么需要它</h3>
+  <p>线程组控制的是「<b>有多少并发用户</b>」，但有时候你的需求是「<b>系统要扛住每秒 100 个请求</b>」——这是吞吐量目标，不是并发用户数目标。两者不一样：100 个用户如果每个 1 秒发一次，TPS 才 100；10 个用户每个 0.1 秒发一次，TPS 也能 100。</p>
+  <p><b>Throughput Shaping Timer</b> 让你直接按时间编排「每秒要达到多少 RPS」，JMeter 会自动动态调节请求节奏去逼近目标。</p>
+
+  <h3>安装</h3>
+  <p>Plugins Manager 搜索 <code>Throughput Shaping Timer</code>，勾选安装，重启。</p>
+
+  <h3>实战：维持每秒 50→100→200 的阶梯吞吐</h3>
+  <ol class="steps">
+    <li>在线程组下右键 → <span class="kbd">Add</span> → <span class="kbd">Timer</span> → <code>jp@gc - Throughput Shaping Timer</code>。</li>
+    <li>在定时器面板里点 <b>“Add Row”</b> 添加几个阶段，每行三个参数：</li>
+  </ol>
+  <pre><span class="cm"># 每行：Start RPS / End RPS / 持续秒数</span>
+<span class="num">1</span>   <span class="num">50</span>   <span class="num">60</span>    <span class="cm"># 前 60 秒：维持 50 RPS</span>
+<span class="num">50</span>  <span class="num">100</span>  <span class="num">60</span>    <span class="cm"># 接下来 60 秒：从 50 爬到 100 RPS</span>
+<span class="num">100</span> <span class="num">200</span>  <span class="num">120</span>   <span class="cm"># 再 120 秒：从 100 爬到 200 RPS</span></pre>
+  <ol class="steps" start="3">
+    <li><b>关键配套</b>：吞吐量定时器只管「节奏」，真正发请求还得靠线程。要保证线程数「够用」，否则目标 TPS 打不到。一般把线程组的<b>线程数设得比预估需求多一些</b>（比如目标 200 RPS、单请求耗时 0.5 秒，至少需要 100 个线程）。</li>
+    <li>搭配上一节的「Transactions Per Second」图表运行，就能直观验证实际 TPS 是否贴近你设定的目标曲线。</li>
+  </ol>
+
+  <div class="tip tip-info">
+    <b>使用场景：</b>容量规划（「系统能不能稳定扛住 500 QPS」）、SLA 验证（「P99 是否在 200ms 内」）、对比基准测试（不同版本用相同 TPS 曲线对比）。这是进阶性能测试的标志能力。
+  </div>
+</section>
+
+<!-- ============ 模拟采样器 ============ -->
+<section id="dummy">
+  <h2 class="sec-title"><span class="num">07</span>模拟采样器：调试利器</h2>
+  <p class="sec-desc">不发真实请求，也能造一条结果——调脚本、试图表时省时省力。</p>
+
+  <h3>它能干什么</h3>
+  <p><b>Dummy Sampler</b> 不真正访问任何服务器，而是「伪造」一条采样结果：你可以指定响应时间、响应码、响应数据。这意味着你可以：</p>
+  <ul>
+    <li><b>调试脚本逻辑</b>：在后置处理器、断言、变量提取还没接通真实接口时，先用假结果把脚本流程跑通。</li>
+    <li><b>演示图表</b>：想给学生看「TPS 图长什么样」，不必真去压服务器，用 Dummy 快速造数据。</li>
+    <li><b>模拟异常</b>：手动设响应码 500、超长响应时间，验证你的断言和报告逻辑是否正确处理异常。</li>
+  </ul>
+
+  <h3>安装与使用</h3>
+  <ol class="steps">
+    <li>Plugins Manager 搜索 <code>Dummy Sampler</code>，勾选安装，重启。</li>
+    <li>线程组右键 → <span class="kbd">Add</span> → <span class="kbd">Sampler</span> → <code>jp@gc - Dummy Sampler</code>。</li>
+    <li>在面板里填写：<b>Response Code</b>（如 200）、<b>Response Time</b>（如 120，单位 ms）、<b>Response Data</b>（响应体内容，可放 JSON）。</li>
+    <li>运行，察看结果树里就会出现一条「假」但完整的采样结果，后续的断言、提取器都能正常处理它。</li>
+  </ol>
+
+  <div class="tip tip-ok">
+    <b>小白友好提示：</b>它本质是「脚手架」。等真实接口就绪后，把 Dummy Sampler 禁用或删掉、启用真实 HTTP 请求即可。调试期用它，能少走很多弯路。
+  </div>
+</section>
+
+<!-- ============ 实战串联 ============ -->
+<section id="combat">
+  <h2 class="sec-title"><span class="num">08</span>实战串联：一次完整的插件压测</h2>
+  <p class="sec-desc">把上面几个插件串成一个真实可跑的压测脚本。</p>
+
+  <div class="card blue">
+    <h4>目标场景</h4>
+    <p>对一个 Web 首页做<b>阶梯加压</b>：从 0 用户每 20 秒加 10 个、加到 100，保持 3 分钟，观察响应时间和 TPS 的拐点。</p>
+  </div>
+
+  <h3>脚本搭建步骤</h3>
+  <ol class="steps">
+    <li>新建测试计划，添加 <code>jp@gc - Stepping Thread Group</code>（阶梯线程组），按第 04 节配置到 100 用户、每 20 秒加 10。</li>
+    <li>在线程组里添加 <code>HTTP Request Defaults</code>（HTTP 请求默认值），填好被测服务器 IP 和端口，避免每个请求重复写。</li>
+    <li>添加一个 <code>HTTP Request</code> 取样器，路径填首页路径（如 <code>/</code>）。</li>
+    <li>添加监听器：<code>View Results Tree</code>（察看结果树，调试用）、<code>jp@gc - Active Threads Over Time</code>、<code>jp@gc - Response Times Over Time</code>、<code>jp@gc - Transactions Per Second</code>。</li>
+    <li>保存测试计划为 <code>.jmx</code> 文件。</li>
+    <li>点 ▶ 用 GUI 跑一遍，确认三张图都在动、请求都 200。</li>
+  </ol>
+
+  <h3>正式压测（命令行模式）</h3>
+  <p>调通后，真正的压力测试用命令行跑，避免 GUI 拖累性能：</p>
+  <pre><span class="cm"># Windows，jmeter 路径换成你的</span>
+D:\tools\apache-jmeter-5.5\bin\jmeter <span class="kw">-n</span> <span class="kw">-t</span> steptest.jmx <span class="kw">-l</span> result.jtl <span class="kw">-e</span> <span class="kw">-o</span> report
+
+<span class="cm"># 参数解释</span>
+<span class="kw">-n</span>  非GUI模式（命令行）
+<span class="kw">-t</span>  指定测试计划文件
+<span class="kw">-l</span>  指定结果日志文件（.jtl）
+<span class="kw">-e</span>  测试结束后生成HTML报告
+<span class="kw">-o</span>  报告输出目录（必须不存在或为空）</pre>
+
+  <p>跑完后打开 <code>report/index.html</code>，里面会有一套完整的仪表盘：APDEX、统计表、响应时间/TPS/错误率随时间变化的图……比 GUI 里一张张看更全面，而且<b>可直接作为测试报告交付</b>。</p>
+
+  <div class="tip tip-info">
+    <b>关于插件图表与 HTML 报告的关系：</b>命令行模式跑出来的 <code>report</code> 是 JMeter 原生报告，已包含趋势图，<b>不依赖</b> jp@gc 插件。插件图表主要用于<b>调试阶段 GUI 实时观察</b>。两者互补：调试看插件图、出报告用原生 HTML 报告。
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section id="faq">
+  <h2 class="sec-title"><span class="num">09</span>常见问题 FAQ</h2>
+
+  <h3>Q1：Plugins Manager 安装后，Options 菜单里找不到？</h3>
+  <div class="card">
+    <p>三个排查点：① jar 没放进 <code>lib/ext</code>（最常见，放成了 <code>lib</code>）；② 没重启 JMeter；③ 下的 jar 不完整，重新下载覆盖一次。正确放好后<b>完全关闭再重启</b> JMeter 即可。</p>
+  </div>
+
+  <h3>Q2：安装插件后报错 / JMeter 启动不了？</h3>
+  <div class="card">
+    <p>多半是<b>插件版本与 JMeter 版本不兼容</b>。确认你的 JMeter 版本（菜单 Help → About），尽量用 JMeter 5.x 最新稳定版；插件也用最新版。若装某个插件后启动崩溃，可手动删除 <code>lib/ext</code> 里对应插件的 jar 来恢复。</p>
+  </div>
+
+  <h3>Q3：装这么多插件会影响压测准确性吗？</h3>
+  <div class="card">
+    <p>会影响，但可控。<b>监听器类</b>插件（图表）在 GUI 模式下吃内存，线程数大时会拖慢、甚至影响压测机自身性能。所以：调试阶段用 GUI 看图没问题；<b>正式大压力测试一律用命令行模式</b>，并把不需要的监听器禁用或删除。命令行模式不渲染图表，几乎无额外开销。</p>
+  </div>
+
+  <h3>Q4：jp@gc 是什么意思？</h3>
+  <div class="card">
+    <p>是插件作者网站 <code>jmeter-plugins.org</code> 的署名前缀（gc = good code / 作者代号）。所有来自该社区的插件元件在「添加」菜单里都以 <code>jp@gc -</code> 开头，看到它就知道是第三方插件装的，与 JMeter 原生元件区分开。</p>
+  </div>
+
+  <h3>Q5：插件管理器自己能升级吗？</h3>
+  <div class="card">
+    <p>可以。Plugins Manager 打开后，在 <b>Installed</b> 标签页里如果有新版，会提示升级；它自身也会出现在可升级列表里。点升级、重启即可，无需再手动下 jar。</p>
+  </div>
+
+  <h3>Q6：离线环境（内网）能装插件吗？</h3>
+  <div class="card">
+    <p>Plugins Manager 默认联网拉取插件列表。离线环境下可手动把所需插件 jar 下好放进 <code>lib/ext</code>，效果一样；只是没法用管理器自动更新。也可配置内网镜像源，具体见 jmeter-plugins.org 文档。</p>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <p>DeanNote · JMeter 性能测试学习笔记 &nbsp;|&nbsp; 关联：<a href="JMeter 快速上手.md">JMeter 快速上手</a> &nbsp;|&nbsp; 插件官网：<a href="https://jmeter-plugins.org" target="_blank" rel="noopener">jmeter-plugins.org</a></p>
+  <p style="margin-top:8px">本教程基于 JMeter 5.x + Plugins Manager 1.x，操作步骤通用。</p>
+</footer>
+
+<button id="totop" title="回到顶部" aria-label="回到顶部">↑</button>
+
+<script>
+  // 回到顶部
+  const btn=document.getElementById('totop');
+  window.addEventListener('scroll',()=>{
+    if(window.scrollY>400) btn.classList.add('show'); else btn.classList.remove('show');
+  });
+  btn.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
+
+  // 导航高亮（滚动跟随）
+  const links=document.querySelectorAll('.topnav a');
+  const secs=[...links].map(a=>document.querySelector(a.getAttribute('href')));
+  window.addEventListener('scroll',()=>{
+    let cur=-1, y=window.scrollY+120;
+    secs.forEach((s,i)=>{ if(s && s.offsetTop<=y) cur=i; });
+    links.forEach((a,i)=>a.classList.toggle('active', i===cur));
+  });
+</script>
+</body>
+</html>
