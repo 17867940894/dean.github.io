@@ -1,5 +1,6 @@
 name: Deploy blog to GitHub Pages
 
+# 首次添加本文件时若未自动触发，做一次新的推送或手动 Run workflow 即可。
 on:
   push:
     branches:
