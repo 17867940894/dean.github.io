@@ -1,0 +1,5 @@
+# 备用主题配置（覆盖 hexo-theme-landscape 的 _config.yml）
+menu:
+  Home: /
+  Archives: /archives
+  笔记: /notes
